@@ -16,14 +16,16 @@ e aprire http://localhost:5187.
 - `assets/js/main.js` — animazioni (GSAP, ScrollTrigger, SplitText, Lenis da CDN) e interazioni:
   disegno tecnico che si traccia e pedala allo scroll, rastrelliera trascinabile con oscillazione,
   ordine di lavoro, profilo altimetrico, cartellino di prenotazione → WhatsApp, orari con stato live.
-- `assets/img/favicon.svg`.
+- `assets/img/` — logo (originale e versioni trasparenti), favicon, icona Apple, anteprima per i link.
 
 ## Da completare prima della pubblicazione
 
 1. **Foto**: quelle attuali sono provvisorie (Unsplash, uso commerciale consentito) e mostrano anche bici
    di marchi non trattati. Vanno sostituite con foto del negozio, delle bici in vetrina e dell'officina.
    Ogni `<img>` in `index.html` punta a `images.unsplash.com`: basta cambiare `src`/`srcset`.
-2. **Logo**: il marchio in alto è testuale; se c'è il file ufficiale (SVG o PNG) va inserito in `.logo`.
+2. **Logo**: inserito. `logo-mark.png` (simbolo, in alto) e `logo-full.png` (footer) sono ricavati dal file
+   originale come maschere trasparenti e prendono il colore della sezione; `og-image.png` è l'anteprima dei link.
+   Se arriva un SVG ufficiale, basta sostituire questi file. L'URL di `og:image` va aggiornato col dominio definitivo.
 3. **P.IVA** nel footer (`XXXXXXXXXXX`) e pagine **Privacy** e **Cookie** (link `#` nel footer).
 4. **Dominio**: quando è noto, aggiungere `<link rel="canonical">`, `og:url`, e `url`/`image` nel JSON-LD.
 5. **WhatsApp**: form, bottoni e schede usano `wa.me/393337648755`. Verificare che il numero sia

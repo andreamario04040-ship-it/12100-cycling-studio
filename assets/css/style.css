@@ -186,11 +186,22 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .hdr.is-dark.is-scrolled { background: var(--ink); box-shadow: 0 1px 0 var(--line-dark); }
 .hdr.is-dark .btn { --bg: var(--alu); --fg: var(--ink); }
 
-.logo { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; line-height: 1; }
-.logo__num { font-family: var(--f-stencil); font-weight: 800; font-size: 30px; letter-spacing: .01em; }
+.logo { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; line-height: 1; }
+/* Logo ufficiale usato come maschera: prende il colore del testo (scuro sul chiaro, chiaro sul nero). */
+.logo__mark, .logo__full { display: block; flex: none; background-color: currentColor; transition: background-color .35s; }
+.logo__mark {
+  height: 44px;
+  aspect-ratio: 593 / 427;
+  -webkit-mask: url("../img/logo-mark.png") center / contain no-repeat;
+  mask: url("../img/logo-mark.png") center / contain no-repeat;
+}
+.logo__full {
+  width: clamp(170px, 16vw, 240px);
+  aspect-ratio: 593 / 514;
+  -webkit-mask: url("../img/logo-full.png") center / contain no-repeat;
+  mask: url("../img/logo-full.png") center / contain no-repeat;
+}
 .logo__txt { font-stretch: 85%; font-weight: 600; font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; line-height: 1.05; }
-.logo--lg .logo__num { font-size: clamp(56px, 7vw, 96px); }
-.logo--lg .logo__txt { font-size: 13px; }
 
 .hdr__nav { display: flex; gap: clamp(18px, 2.2vw, 34px); margin-inline: auto; }
 .hdr__nav a {
@@ -821,6 +832,7 @@ html.js .bike [data-show], html.js .bk-chain, html.js .bike .rimtxt, html.js .bi
 }
 @media (max-width: 1023px) {
   :root { --hdr: 62px; }
+  .logo__mark { height: 38px; }
   .hdr__nav { display: none; }
   .hdr__right { margin-left: auto; }
   .hdr__menu { display: inline-flex; }
