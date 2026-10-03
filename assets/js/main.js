@@ -135,6 +135,7 @@
       if (down && y > 420) hdr.classList.add('is-hidden');
       else if (up || y < 420) hdr.classList.remove('is-hidden');
     }
+    doc.style.setProperty('--stick-top', hdr.classList.contains('is-hidden') ? '0px' : 'var(--hdr)');
     lastY = y;
   }
   if (lenis) lenis.on('scroll', ({ scroll }) => onScroll(scroll));
@@ -636,20 +637,32 @@
     const Y1 = 70;
     line.style.strokeDasharray = `${L} ${L}`;
 
+    // Trova il punto del profilo a una certa x (la curva sale sempre verso destra).
+    const atX = (x) => {
+      let lo = 0;
+      let hi = L;
+      for (let k = 0; k < 22; k++) {
+        const mid = (lo + hi) / 2;
+        if (line.getPointAtLength(mid).x < x) lo = mid;
+        else hi = mid;
+      }
+      return (lo + hi) / 2;
+    };
+
+    // p = avanzamento orizzontale 0..1: ogni tappa corrisponde a un quarto esatto della salita.
     const set = (p) => {
-      line.style.strokeDashoffset = String(L * (1 - p));
-      const pt = line.getPointAtLength(L * p);
+      const len = p <= 0 ? 0 : p >= 1 ? L : atX(20 + 1560 * p);
+      const pt = line.getPointAtLength(len);
+      line.style.strokeDashoffset = String(L - len);
       rider.setAttribute('transform', `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)})`);
       clip.setAttribute('width', pt.x.toFixed(1));
       const alt = 534 + ((Y0 - pt.y) / (Y0 - Y1)) * 2210;
       altEl.textContent = String(Math.round(alt)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-      const px = clamp((pt.x - 20) / 1560, 0, 1);
       stages.forEach((s, i) => {
-        const local = clamp(px * 4 - i, 0, 1);
-        s.style.setProperty('--p', local.toFixed(3));
-        s.classList.toggle('is-on', px * 4 > i + 0.02 || (i === 0 && p > 0.005));
+        s.style.setProperty('--p', clamp(p * 4 - i, 0, 1).toFixed(3));
+        s.classList.toggle('is-on', p * 4 > i + 0.001);
       });
-      marks.forEach((m) => m.classList.toggle('is-on', px >= +m.dataset.p - 0.002));
+      marks.forEach((m) => m.classList.toggle('is-on', p >= +m.dataset.p - 0.002));
     };
 
     if (!anim) {
@@ -665,10 +678,11 @@
         scrollTrigger: { trigger: box, start: 'center 52%', end: '+=1500', pin: true, scrub: 0.8, anticipatePin: 1 },
       });
     });
+    // Mobile: il grafico è sticky (CSS) e avanza mentre le tappe passano a metà schermo.
     mm.add('(max-width: 899px)', () => {
       G.to(proxy, {
         p: 1, ease: 'none', onUpdate: () => set(proxy.p),
-        scrollTrigger: { trigger: box, start: 'top 70%', end: 'bottom 35%', scrub: 0.6 },
+        scrollTrigger: { trigger: $('.stages', box), start: 'top 52%', end: 'bottom 52%', scrub: 0.5 },
       });
     });
   }
