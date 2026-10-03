@@ -812,7 +812,7 @@
       const map = $('[data-map]');
       const f = document.createElement('iframe');
       f.src = 'https://www.google.com/maps?q=12100%20Cycling%20Studio%2C%20Via%20San%20Giovanni%20Bosco%2010%2C%2012100%20Cuneo&z=16&output=embed';
-      f.title = 'Mappa: 12100 Cycling Studio, Via San Giovanni Bosco 10, Cuneo';
+      f.setAttribute('aria-label', 'Mappa: 12100 Cycling Studio, Via San Giovanni Bosco 10, Cuneo');
       f.loading = 'lazy';
       f.referrerPolicy = 'no-referrer-when-downgrade';
       f.allowFullscreen = true;
