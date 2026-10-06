@@ -469,14 +469,11 @@ html.js .tape:not(.is-on) { background-size: 0% 100%; color: inherit; }
 .rack__hint { font-stretch: 85%; font-weight: 600; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); transition: opacity .6s; }
 .rack__hint.is-gone { opacity: 0; }
 
-/* --------------------------------------------------------------- brands / decal sheet */
+/* --------------------------------------------------------------- brands: adesivi in loop */
 .brands { padding-block: clamp(80px, 10vw, 160px); }
 .sheet {
   position: relative;
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: clamp(28px, 3vw, 48px) clamp(18px, 2.2vw, 36px);
-  padding: clamp(24px, 3.4vw, 56px);
+  padding-block: clamp(30px, 3.4vw, 52px) clamp(20px, 2.6vw, 36px);
   background-color: var(--paper);
   background-image:
     linear-gradient(var(--line) 1px, transparent 1px),
@@ -485,24 +482,39 @@ html.js .tape:not(.is-on) { background-size: 0% 100%; color: inherit; }
   background-position: -1px -1px;
   box-shadow: 0 40px 60px -50px rgba(14, 15, 17, .55);
 }
-.sheet::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255, 255, 255, .55), transparent 40%); pointer-events: none; }
-.decal { margin: 0; grid-column: span 2; display: flex; flex-direction: column; gap: 16px; position: relative; z-index: 1; }
-.decal:nth-child(4), .decal:nth-child(5) { grid-column: span 3; }
-.decal__face {
-  --rx: 0deg; --ry: 0deg; --mx: 50%;
-  position: relative;
+.sheet__viewport {
+  overflow: hidden;
+  padding-block: 22px 30px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+.brandloop { list-style: none; margin: 0; padding: 0 clamp(18px, 2.4vw, 40px); display: flex; gap: clamp(26px, 3vw, 52px); width: max-content; will-change: transform; }
+.decal { flex: none; width: clamp(250px, 23vw, 340px); perspective: 900px; }
+.decal__btn { display: block; width: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.decal__btn:focus-visible { outline: none; }
+.decal__btn:focus-visible .decal__face, .decal__btn:focus-visible .decal__back { box-shadow: 0 0 0 3px var(--alu), 0 0 0 5px var(--blue); }
+.decal__tilt {
+  --rx: 0deg; --ry: 0deg;
+  display: block;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transform-style: preserve-3d;
+  transition: transform .5s var(--ease);
+}
+.decal__card { display: grid; transform-style: preserve-3d; transition: transform .9s cubic-bezier(.3, 1.35, .4, 1); }
+.decal.is-flipped .decal__card { transform: rotateY(180deg); }
+.decal__face, .decal__back {
+  grid-area: 1 / 1;
   aspect-ratio: 16 / 9;
-  display: grid;
-  place-items: center;
   border-radius: 14px;
   outline: 1.5px dashed rgba(14, 15, 17, .28);
   outline-offset: 7px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   box-shadow: 0 1px 1px rgba(14, 15, 17, .25), 0 10px 18px -12px rgba(14, 15, 17, .55);
-  transform: perspective(800px) rotateX(var(--rx)) rotateY(var(--ry));
-  transition: transform .5s var(--ease), box-shadow .5s var(--ease);
-  overflow: hidden;
+  transition: box-shadow .5s var(--ease);
 }
-.decal:hover .decal__face { box-shadow: 0 1px 1px rgba(14, 15, 17, .2), 0 26px 36px -18px rgba(14, 15, 17, .5); }
+.decal__face { position: relative; display: grid; place-items: center; overflow: hidden; }
+.decal:hover .decal__face, .decal:hover .decal__back { box-shadow: 0 1px 1px rgba(14, 15, 17, .2), 0 26px 36px -18px rgba(14, 15, 17, .5); }
 .decal__face::after {
   content: "";
   position: absolute;
@@ -513,28 +525,28 @@ html.js .tape:not(.is-on) { background-size: 0% 100%; color: inherit; }
   border-top-left-radius: 6px;
   transition: width .45s var(--ease), height .45s var(--ease);
 }
-.decal:hover .decal__face::after { width: 46px; height: 46px; }
-.decal__face--ink { background: var(--ink); color: #fff; }
-.decal__face--blue { background: var(--blue); color: #fff; }
-.decal__face--white { background: #fff; color: var(--ink); }
-.decal__face--kraft { background: var(--kraft); color: var(--ink); }
-.decal__face--chrome {
+.decal:hover:not(.is-flipped) .decal__face::after { width: 46px; height: 46px; }
+.decal__face--ink { background: var(--ink); }
+.decal__face--white { background: #fff; }
+.decal__logo { width: var(--w, 70%); max-height: 46%; height: auto; object-fit: contain; pointer-events: none; -webkit-user-drag: none; user-select: none; }
+.decal__back {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: clamp(14px, 1.4vw, 20px) clamp(16px, 1.6vw, 22px);
+  background: var(--kraft);
   color: var(--ink);
-  background: linear-gradient(110deg, #82868d 0%, #f3f4f5 18%, #9a9ea5 34%, #eceded 50%, #7a7e85 66%, #e2e3e5 82%, #a4a8ae 100%);
-  background-size: 240% 100%;
-  background-position: var(--mx) 50%;
-  transition: transform .5s var(--ease), box-shadow .5s var(--ease), background-position .4s ease-out;
+  font-size: clamp(12.5px, .95vw, 14px);
+  line-height: 1.38;
 }
-.decal__name { font-family: var(--f-display); font-weight: 800; font-size: clamp(34px, 4.2vw, 70px); line-height: 1; text-transform: uppercase; letter-spacing: .01em; padding-inline: 8%; text-align: center; }
-.decal__name--slant { display: inline-block; transform: skewX(-12deg); letter-spacing: .03em; }
-.decal__name--wide { font-family: var(--f-text); font-stretch: 100%; font-weight: 700; text-transform: none; letter-spacing: -.035em; font-size: clamp(30px, 3.6vw, 60px); }
-.decal__name--stencil { font-family: var(--f-stencil); letter-spacing: .12em; }
-.decal__name--cond { font-family: var(--f-text); font-stretch: 85%; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; font-size: clamp(22px, 2.5vw, 42px); }
-.decal__name sup { font-size: .45em; vertical-align: top; position: relative; top: .1em; margin-left: .05em; color: var(--blue-2); }
-.decal figcaption { font-size: 14.5px; color: var(--muted); line-height: 1.45; padding-left: 2px; }
-.decal figcaption strong { display: block; color: var(--ink); font-stretch: 85%; font-weight: 700; font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 4px; }
-.sheet__more { grid-column: 1 / -1; margin: 6px 0 0; padding-top: 18px; border-top: 1.5px dashed rgba(14, 15, 17, .28); font-size: 15px; color: var(--muted); position: relative; z-index: 1; }
+.decal__back strong { font-family: var(--f-display); font-weight: 800; font-size: clamp(20px, 1.8vw, 26px); line-height: .95; text-transform: uppercase; }
+.sheet__foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 24px; }
+.sheet__hint { margin: 0; font-stretch: 85%; font-weight: 600; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--blue); }
+.sheet__more { margin: 0; font-size: 15px; color: var(--muted); }
 .sheet__more strong { color: var(--ink); font-weight: 600; }
+html:not(.js) .sheet__viewport, .sheet__viewport.is-static { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
 
 /* --------------------------------------------------------------- workshop (dark) */
 .shop { background: var(--ink); color: var(--alu); padding-block: clamp(96px, 11vw, 190px); }
@@ -845,8 +857,6 @@ html.js .bike [data-show], html.js .bk-chain, html.js .bike .rimtxt, html.js .bi
   .rack-ctrl { grid-column: 10 / span 3; align-self: end; }
   .mani { grid-template-columns: 1fr; }
   .mani__aside { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: end; }
-  .sheet { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .decal, .decal:nth-child(4), .decal:nth-child(5) { grid-column: span 1; }
   .shop__grid, .voices__grid, .book__grid, .visit__grid { grid-template-columns: 1fr; }
   .shop__visual, .voices__score, .book__intro { position: relative; top: 0; }
   .shop__frame { aspect-ratio: 16 / 10; }
@@ -864,8 +874,6 @@ html.js .bike [data-show], html.js .bk-chain, html.js .bike .rimtxt, html.js .bi
   .sec-head__lead, .rack-sec .sec-head__lead { grid-column: 1 / -1; }
   .rack-ctrl { grid-column: 1 / -1; justify-content: flex-start; margin-top: 22px; }
   .rack__item { width: 80vw; }
-  .sheet { grid-template-columns: 1fr; }
-  .decal__face { aspect-ratio: 2.3 / 1; }
   .worder__meta { display: none; }
   .worder__body p { padding-left: 0; }
   .profile__top { grid-template-columns: 1fr 1fr; }
@@ -875,6 +883,7 @@ html.js .bike [data-show], html.js .bk-chain, html.js .bike .rimtxt, html.js .bi
   .board { grid-template-columns: 1fr; }
   .clip:nth-child(n) { margin-top: 0; }
   .checks { grid-template-columns: 1fr 1fr; }
+  .decal { width: 72vw; }
   .tt__slot span { font-size: 11px; }
   .tt__slot { padding-inline: 6px; }
   .foot__grid { grid-template-columns: 1fr; }

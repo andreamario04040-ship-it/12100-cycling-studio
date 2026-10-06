@@ -571,33 +571,162 @@
     }
   }
 
-  /* ------------------------------------------------------------ decal dei marchi */
+  /* ------------------------------------------------------------ marchi: adesivi in loop */
   function initDecals() {
-    const decals = $$('[data-decal]');
-    if (anim) {
-      G.from(decals.map((d) => $('.decal__face', d)), {
-        y: -60, rotation: (i) => [-9, 7, -6, 8, -7][i % 5], scale: 1.14, opacity: 0,
-        duration: 1.1, ease: 'back.out(1.6)', stagger: 0.1, clearProps: 'transform,opacity',
-        scrollTrigger: { trigger: '[data-sheet]', start: 'top 78%', once: true },
-      });
-    }
-    if (!fine || reduce) return;
-    decals.forEach((d) => {
-      const face = $('.decal__face', d);
-      d.addEventListener('pointermove', (e) => {
-        const r = face.getBoundingClientRect();
+    const loop = $('[data-brandloop]');
+    if (!loop) return;
+    const viewport = $('[data-brand-viewport]');
+    const originals = $$('.decal', loop);
+
+    // Gira l'adesivo: sul retro c'è la descrizione del marchio. Uno alla volta.
+    const setFlip = (decal, on) => {
+      decal.classList.toggle('is-flipped', on);
+      $('.decal__btn', decal).setAttribute('aria-pressed', String(on));
+    };
+    const flipped = () => $$('.decal.is-flipped', loop);
+    const closeAll = () => flipped().forEach((d) => setFlip(d, false));
+    loop.addEventListener('click', (e) => {
+      const btn = e.target.closest('.decal__btn');
+      if (!btn) return;
+      const decal = btn.closest('.decal');
+      const on = !decal.classList.contains('is-flipped');
+      closeAll();
+      if (on) setFlip(center(decal) || decal, true);
+      kick();
+    });
+    document.addEventListener('click', (e) => { if (!e.target.closest('[data-brandloop]') && flipped().length) { closeAll(); kick(); } });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && flipped().length) { closeAll(); kick(); } });
+
+    // Inclinazione 3D che segue il mouse (l'angolo che si stacca è in CSS).
+    if (fine && !reduce) {
+      loop.addEventListener('pointermove', (e) => {
+        const decal = e.target.closest('.decal');
+        if (!decal) return;
+        const tilt = $('.decal__tilt', decal);
+        const r = tilt.getBoundingClientRect();
         const px = (e.clientX - r.left) / r.width - 0.5;
         const py = (e.clientY - r.top) / r.height - 0.5;
-        face.style.setProperty('--rx', `${(-py * 14).toFixed(2)}deg`);
-        face.style.setProperty('--ry', `${(px * 16).toFixed(2)}deg`);
-        face.style.setProperty('--mx', `${((px + 0.5) * 100).toFixed(1)}%`);
+        tilt.style.setProperty('--rx', `${(-py * 14).toFixed(2)}deg`);
+        tilt.style.setProperty('--ry', `${(px * 16).toFixed(2)}deg`);
       });
-      d.addEventListener('pointerleave', () => {
-        face.style.setProperty('--rx', '0deg');
-        face.style.setProperty('--ry', '0deg');
-        face.style.setProperty('--mx', '50%');
+      loop.addEventListener('pointerout', (e) => {
+        const decal = e.target.closest('.decal');
+        if (decal && !decal.contains(e.relatedTarget)) {
+          const tilt = $('.decal__tilt', decal);
+          tilt.style.setProperty('--rx', '0deg');
+          tilt.style.setProperty('--ry', '0deg');
+        }
       });
+    }
+
+    if (reduce) {
+      viewport.classList.add('is-static');
+      return;
+    }
+
+    // Copie per il loop continuo (nascoste ai lettori di schermo).
+    for (let k = 0; k < 2; k++) {
+      originals.forEach((li) => {
+        const c = li.cloneNode(true);
+        c.setAttribute('aria-hidden', 'true');
+        $$('[id]', c).forEach((el) => el.removeAttribute('id'));
+        const b = $('.decal__btn', c);
+        b.tabIndex = -1;
+        b.removeAttribute('aria-describedby');
+        loop.appendChild(c);
+      });
+    }
+
+    const SPEED = 42; // px al secondo
+    let x = 0;
+    let speed = 0;
+    let setW = 0;
+    let last = 0;
+    let raf = 0;
+    let hovering = false;
+    let visible = false;
+    let focused = false;
+    let seek = null;
+    const measure = () => {
+      const items = loop.children;
+      setW = items[originals.length].offsetLeft - items[0].offsetLeft;
+    };
+    const paused = () => hovering || focused || flipped().length > 0;
+    function frame(t) {
+      const dt = last ? Math.min(0.05, (t - last) / 1000) : 0;
+      last = t;
+      const goal = paused() || !visible ? 0 : SPEED;
+      if (seek !== null) {
+        // porta al centro l'adesivo appena girato
+        x += (seek - x) * Math.min(1, dt * 7);
+        speed = 0;
+        if (Math.abs(seek - x) < 0.5) { x = seek; seek = null; }
+      } else {
+        speed += (goal - speed) * Math.min(1, dt * 3.2);
+        x -= speed * dt;
+        if (setW && x <= -setW && !flipped().length) x += setW;
+      }
+      loop.style.transform = `translate3d(${x.toFixed(2)}px,0,0)`;
+      if (seek === null && goal === 0 && speed < 0.4) { speed = 0; raf = 0; last = 0; return; }
+      raf = requestAnimationFrame(frame);
+    }
+    // Centra un adesivo restando dentro le tre copie (così i bordi non restano mai vuoti).
+    // Se serve, usa la copia identica dell'insieme accanto e restituisce quella da girare.
+    function center(decal) {
+      if (reduce || !setW) return null;
+      const items = [...loop.children];
+      const idx = items.indexOf(decal);
+      const n = originals.length;
+      const vp = viewport.getBoundingClientRect();
+      const r = decal.getBoundingClientRect();
+      const t = x + (vp.left + vp.width / 2) - (r.left + r.width / 2);
+      const lo = vp.width - loop.scrollWidth;
+      const opts = [0, 1, -1]
+        .map((k) => ({ pos: t - k * setW, el: items[idx + k * n] }))
+        .filter((o) => o.el && o.pos <= 0 && o.pos >= lo)
+        .sort((a, b) => Math.abs(a.pos - x) - Math.abs(b.pos - x));
+      if (!opts.length) return null;
+      seek = opts[0].pos;
+      kick();
+      return opts[0].el;
+    }
+    function kick() {
+      if (reduce) return;
+      if (!raf) raf = requestAnimationFrame(frame);
+    }
+
+    if (fine) {
+      viewport.addEventListener('pointerenter', () => { hovering = true; });
+      viewport.addEventListener('pointerleave', () => { hovering = false; kick(); });
+    }
+    // Con la tastiera: porta in vista l'adesivo che riceve il focus.
+    loop.addEventListener('focusin', (e) => {
+      focused = true;
+      const decal = e.target.closest('.decal');
+      if (!decal) return;
+      const left = decal.offsetLeft + x;
+      const vw = viewport.clientWidth;
+      if (left < 0 || left + decal.offsetWidth > vw) {
+        x = Math.min(0, -(decal.offsetLeft - (vw - decal.offsetWidth) / 2));
+        loop.style.transform = `translate3d(${x.toFixed(2)}px,0,0)`;
+      }
     });
+    loop.addEventListener('focusout', (e) => { if (!loop.contains(e.relatedTarget)) { focused = false; kick(); } });
+
+    new ResizeObserver(measure).observe(loop);
+    measure();
+    new IntersectionObserver((entries) => {
+      visible = entries.some((en) => en.isIntersecting);
+      if (visible) kick();
+    }).observe(viewport);
+
+    if (anim) {
+      G.from($$('.decal__btn', loop), {
+        y: -50, rotation: (i) => [-9, 7, -6, 8, -7][i % 5], scale: 1.12, opacity: 0,
+        duration: 1.1, ease: 'back.out(1.6)', stagger: 0.07, clearProps: 'transform,opacity',
+        scrollTrigger: { trigger: '[data-sheet]', start: 'top 80%', once: true },
+      });
+    }
   }
 
   /* ------------------------------------------------------------ officina: ordine di lavoro */

@@ -34,7 +34,10 @@ e aprire http://localhost:5187.
    marchi trattati; aggiornarli con le bici realmente disponibili.
 7. **Indicizzazione**: l'anteprima ha `<meta name="robots" content="noindex, nofollow">` per non finire su Google;
    toglierla quando il sito va online sul dominio definitivo.
-8. **Orari**: sono in `HOURS` in `assets/js/main.js`, nel JSON-LD di `index.html` e nel footer.
+8. **Loghi dei marchi** (`assets/img/brands/`): presi dai siti ufficiali di Colnago, Cervélo, Factor,
+   CeramicSpeed e Carbon-Ti, solo ritagliati. Da concessionari conviene chiedere ai referenti il kit loghi
+   ufficiale (SVG) e le eventuali regole d'uso, e sostituire i file con quelli.
+9. **Orari**: sono in `HOURS` in `assets/js/main.js`, nel JSON-LD di `index.html` e nel footer.
 
 ## Note
 
