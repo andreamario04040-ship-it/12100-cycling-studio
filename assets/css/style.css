@@ -484,6 +484,7 @@ html.js .tape:not(.is-on) { background-size: 0% 100%; color: inherit; }
 }
 .sheet__viewport {
   overflow: hidden;
+  touch-action: pan-y; /* in orizzontale i loghi si trascinano col dito, in verticale scorre la pagina */
   padding-block: 22px 30px;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
@@ -541,6 +542,13 @@ html.js .tape:not(.is-on) { background-size: 0% 100%; color: inherit; }
 }
 .decal__face--ink + .decal__curl { background: linear-gradient(180deg, #f6f6f4 0%, #e3e3e0 30%, #b9bab6 60%, #8f908c 78%, #dcdcd9 100%); }
 .sheet__foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 24px; }
+.hint-touch { display: none; }
+@media (hover: none) { .hint-touch { display: inline; } .hint-mouse { display: none; } }
+.sheet__viewport { -webkit-user-select: none; user-select: none; }
+@media (hover: hover) and (pointer: fine) {
+  .sheet__viewport, .sheet__viewport .decal__btn { cursor: grab; }
+  .sheet__viewport.is-dragging, .sheet__viewport.is-dragging .decal__btn { cursor: grabbing; }
+}
 .sheet__hint { margin: 0; font-stretch: 85%; font-weight: 600; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--blue); }
 .sheet__more { margin: 0; font-size: 15px; color: var(--muted); }
 .sheet__more strong { color: var(--ink); font-weight: 600; }

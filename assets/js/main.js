@@ -666,9 +666,11 @@
     };
     const closeAll = () => opened().forEach((d) => setOpen(d, false));
 
+    let suppressClick = false;
     loop.addEventListener('click', (e) => {
       const btn = e.target.closest('.decal__btn');
       if (!btn) return;
+      if (suppressClick) { suppressClick = false; e.preventDefault(); return; }
       const decal = btn.closest('.decal');
       const on = !isOpen(decal);
       closeAll();
@@ -697,7 +699,7 @@
       if (!reduce) {
         loop.addEventListener('pointermove', (e) => {
           const decal = e.target.closest('.decal');
-          if (!decal) return;
+          if (!decal || dragging) return;
           const tilt = $('.decal__tilt', decal);
           const r = tilt.getBoundingClientRect();
           const px = (e.clientX - r.left) / r.width - 0.5;
@@ -744,28 +746,43 @@
     let visible = false;
     let focused = false;
     let seek = null;
+    let touching = false;
+    let dragging = false;
+    let flinging = false;
     const measure = () => {
       const items = loop.children;
       setW = items[originals.length].offsetLeft - items[0].offsetLeft;
       rerender();
     };
-    const paused = () => hovering || focused || opened().length > 0;
+    const paused = () => hovering || focused || touching || opened().length > 0;
+    // riporta x dentro il primo insieme di loghi (le tre copie sono identiche, il salto non si vede)
+    const wrap = () => {
+      if (!setW || opened().length) return 0;
+      let shift = 0;
+      while (x <= -setW) { x += setW; shift += setW; }
+      while (x > 0) { x -= setW; shift -= setW; }
+      return shift;
+    };
     function frame(t) {
       const dt = last ? Math.min(0.05, (t - last) / 1000) : 0;
       last = t;
       const goal = paused() || !visible ? 0 : SPEED;
-      if (seek !== null) {
+      if (dragging) {
+        // la posizione la decide il dito (vedi pointermove)
+      } else if (seek !== null) {
         // porta al centro l'adesivo appena staccato
         x += (seek - x) * Math.min(1, dt * 7);
         speed = 0;
         if (Math.abs(seek - x) < 0.5) { x = seek; seek = null; }
       } else {
-        speed += (goal - speed) * Math.min(1, dt * 3.2);
+        // dopo un lancio la velocità torna con calma a quella normale (inerzia)
+        speed += (goal - speed) * Math.min(1, dt * (flinging ? 1.6 : 3.2));
+        if (flinging && Math.abs(speed - goal) < 30) flinging = false;
         x -= speed * dt;
-        if (setW && x <= -setW && !opened().length) x += setW;
+        wrap();
       }
       loop.style.transform = `translate3d(${x.toFixed(2)}px,0,0)`;
-      if (seek === null && goal === 0 && speed < 0.4) { speed = 0; raf = 0; last = 0; return; }
+      if (!dragging && seek === null && goal === 0 && Math.abs(speed) < 0.4) { speed = 0; raf = 0; last = 0; return; }
       raf = requestAnimationFrame(frame);
     }
     function kick() {
@@ -797,6 +814,68 @@
       viewport.addEventListener('pointerenter', () => { hovering = true; });
       viewport.addEventListener('pointerleave', () => { hovering = false; kick(); });
     }
+    // Dito o mouse: si trascinano i loghi e, lanciandoli, scorrono più veloci per inerzia.
+    let pid = null;
+    let sx = 0;
+    let sy = 0;
+    let sPos = 0;
+    let lx = 0;
+    let lt = 0;
+    let vel = 0;
+    let ptype = 'touch';
+    viewport.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      ptype = e.pointerType;
+      touching = true;
+      pid = e.pointerId;
+      sx = lx = e.clientX;
+      sy = e.clientY;
+      lt = performance.now();
+      vel = 0;
+      kick();
+    });
+    viewport.addEventListener('pointermove', (e) => {
+      if (!touching || e.pointerId !== pid) return;
+      const dx = e.clientX - sx;
+      if (!dragging) {
+        if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(e.clientY - sy)) return;
+        dragging = true;
+        flinging = false;
+        seek = null;
+        closeAll();
+        sPos = x;
+        viewport.classList.add('is-dragging');
+        try { viewport.setPointerCapture(pid); } catch {}
+      }
+      const now = performance.now();
+      const inst = ((e.clientX - lx) / Math.max(1, now - lt)) * 1000;
+      vel = vel * 0.5 + inst * 0.5;
+      lx = e.clientX;
+      lt = now;
+      x = sPos + dx;
+      sPos += wrap();
+      loop.style.transform = `translate3d(${x.toFixed(2)}px,0,0)`;
+      kick();
+    });
+    const release = (e) => {
+      if (!touching || e.pointerId !== pid) return;
+      touching = false;
+      if (dragging) {
+        dragging = false;
+        viewport.classList.remove('is-dragging');
+        // col mouse: dopo il trascinamento il carosello continua a girare anche se il puntatore è sopra
+        if (ptype === 'mouse') hovering = false;
+        if (performance.now() - lt > 120) vel = 0; // fermo prima di lasciare: niente lancio
+        speed = -clamp(vel, -4500, 4500);
+        flinging = true;
+        suppressClick = true;
+        setTimeout(() => { suppressClick = false; }, 160);
+      }
+      kick();
+    };
+    viewport.addEventListener('pointerup', release);
+    viewport.addEventListener('pointercancel', release);
+
     // Con la tastiera: porta in vista l'adesivo che riceve il focus.
     loop.addEventListener('focusin', (e) => {
       if (!e.target.matches(':focus-visible')) return; // solo navigazione da tastiera, non clic o tocchi
