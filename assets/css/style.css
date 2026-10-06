@@ -492,7 +492,7 @@ html.js .tape:not(.is-on) { background-size: 0% 100%; color: inherit; }
 .decal { flex: none; width: clamp(250px, 23vw, 340px); perspective: 900px; }
 .decal__btn { display: block; width: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .decal__btn:focus-visible { outline: none; }
-.decal__btn:focus-visible .decal__face, .decal__btn:focus-visible .decal__back { box-shadow: 0 0 0 3px var(--alu), 0 0 0 5px var(--blue); }
+.decal__btn:focus-visible .decal__back { box-shadow: 0 0 0 3px var(--alu), 0 0 0 5px var(--blue); }
 .decal__tilt {
   --rx: 0deg; --ry: 0deg;
   display: block;
@@ -500,48 +500,46 @@ html.js .tape:not(.is-on) { background-size: 0% 100%; color: inherit; }
   transform-style: preserve-3d;
   transition: transform .5s var(--ease);
 }
-.decal__card { display: grid; transform-style: preserve-3d; transition: transform .9s cubic-bezier(.3, 1.35, .4, 1); }
-.decal.is-flipped .decal__card { transform: rotateY(180deg); }
-.decal__face, .decal__back {
-  grid-area: 1 / 1;
-  aspect-ratio: 16 / 9;
-  border-radius: 14px;
-  outline: 1.5px dashed rgba(14, 15, 17, .28);
-  outline-offset: 7px;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  box-shadow: 0 1px 1px rgba(14, 15, 17, .25), 0 10px 18px -12px rgba(14, 15, 17, .55);
-  transition: box-shadow .5s var(--ease);
-}
-.decal__face { position: relative; display: grid; place-items: center; overflow: hidden; }
-.decal:hover .decal__face, .decal:hover .decal__back { box-shadow: 0 1px 1px rgba(14, 15, 17, .2), 0 26px 36px -18px rgba(14, 15, 17, .5); }
-.decal__face::after {
-  content: "";
-  position: absolute;
-  right: 0; bottom: 0;
-  width: 0; height: 0;
-  background: linear-gradient(135deg, #fbfbfa 0%, #d4d4d1 48%, var(--paper) 50%);
-  box-shadow: -4px -4px 10px rgba(14, 15, 17, .18);
-  border-top-left-radius: 6px;
-  transition: width .45s var(--ease), height .45s var(--ease);
-}
-.decal:hover:not(.is-flipped) .decal__face::after { width: 46px; height: 46px; }
-.decal__face--ink { background: var(--ink); }
-.decal__face--white { background: #fff; }
-.decal__logo { width: var(--w, 70%); max-height: 46%; height: auto; object-fit: contain; pointer-events: none; -webkit-user-drag: none; user-select: none; }
+.decal__card { position: relative; display: grid; }
+.decal__face, .decal__back { grid-area: 1 / 1; aspect-ratio: 16 / 9; border-radius: 14px; }
+/* sotto: la carta con la descrizione (ombra e linea di taglio stanno qui, l'adesivo si ritaglia sopra) */
 .decal__back {
-  transform: rotateY(180deg);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 6px;
+  position: relative;
+  z-index: 1;
+  display: block;
+  overflow: hidden;
   padding: clamp(14px, 1.4vw, 20px) clamp(16px, 1.6vw, 22px);
   background: var(--kraft);
   color: var(--ink);
   font-size: clamp(12.5px, .95vw, 14px);
   line-height: 1.38;
+  outline: 1.5px dashed rgba(14, 15, 17, .28);
+  outline-offset: 7px;
+  box-shadow: 0 1px 1px rgba(14, 15, 17, .25), 0 10px 18px -12px rgba(14, 15, 17, .55);
+  transition: box-shadow .5s var(--ease);
 }
-.decal__back strong { font-family: var(--f-display); font-weight: 800; font-size: clamp(20px, 1.8vw, 26px); line-height: .95; text-transform: uppercase; }
+/* l'angolo in alto a sinistra resta occupato dall'adesivo arrotolato: il testo ci scorre attorno */
+.decal__back::before { content: ""; float: left; width: clamp(34px, 3vw, 44px); height: clamp(34px, 3vw, 44px); shape-outside: polygon(0 0, 100% 0, 0 100%); }
+.decal__back strong { display: block; margin-bottom: 6px; font-family: var(--f-display); font-weight: 800; font-size: clamp(20px, 1.8vw, 26px); line-height: .95; text-transform: uppercase; }
+.decal:hover .decal__back { box-shadow: 0 1px 1px rgba(14, 15, 17, .2), 0 26px 36px -18px rgba(14, 15, 17, .5); }
+/* sopra: l'adesivo, ritagliato lungo la piega mentre si stacca */
+.decal__face { position: relative; z-index: 2; display: grid; place-items: center; overflow: hidden; }
+.decal__face--ink { background: var(--ink); }
+.decal__face--white { background: #fff; }
+.decal__logo { width: var(--w, 70%); max-height: 46%; height: auto; object-fit: contain; pointer-events: none; -webkit-user-drag: none; user-select: none; }
+/* il bordo arrotolato lungo la piega */
+.decal__curl {
+  position: absolute;
+  z-index: 3;
+  left: 0; top: 0;
+  display: none;
+  transform-origin: 0 50%;
+  border-radius: 2px 2px 40% 40% / 2px 2px 100% 100%;
+  background: linear-gradient(180deg, #ffffff 0%, #f3f3f0 28%, #cfd0cc 58%, #a5a6a2 76%, #ececea 100%);
+  filter: drop-shadow(0 7px 7px rgba(14, 15, 17, .28));
+  pointer-events: none;
+}
+.decal__face--ink + .decal__curl { background: linear-gradient(180deg, #f6f6f4 0%, #e3e3e0 30%, #b9bab6 60%, #8f908c 78%, #dcdcd9 100%); }
 .sheet__foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 24px; }
 .sheet__hint { margin: 0; font-stretch: 85%; font-weight: 600; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--blue); }
 .sheet__more { margin: 0; font-size: 15px; color: var(--muted); }

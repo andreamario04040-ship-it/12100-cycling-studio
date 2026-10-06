@@ -578,49 +578,147 @@
     const viewport = $('[data-brand-viewport]');
     const originals = $$('.decal', loop);
 
-    // Gira l'adesivo: sul retro c'è la descrizione del marchio. Uno alla volta.
-    const setFlip = (decal, on) => {
-      decal.classList.toggle('is-flipped', on);
-      $('.decal__btn', decal).setAttribute('aria-pressed', String(on));
+    /* --- piega dell'adesivo -------------------------------------------------
+       L'adesivo si stacca dall'angolo in basso a destra lungo una piega a 45°
+       (x + y = S, con S = W + H − d). La parte staccata scopre la descrizione,
+       lungo la piega c'è il bordo arrotolato. d = quanto si è staccato. */
+    const HOVER_D = 56;
+    const openD = (W, H) => W + H - Math.max(26, H * 0.2);
+    const clipRect = (W, H, S) => {
+      const box = [[0, 0], [W, 0], [W, H], [0, H]];
+      const inside = ([x, y]) => x + y <= S;
+      const out = [];
+      box.forEach((a, i) => {
+        const b = box[(i + 1) % 4];
+        const ia = inside(a);
+        const ib = inside(b);
+        if (ia) out.push(a);
+        if (ia !== ib) {
+          const t = (S - a[0] - a[1]) / ((b[0] - a[0]) + (b[1] - a[1]));
+          out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]);
+        }
+      });
+      return out;
     };
-    const flipped = () => $$('.decal.is-flipped', loop);
-    const closeAll = () => flipped().forEach((d) => setFlip(d, false));
+    const foldSegment = (W, H, S) => {
+      const pts = [];
+      const add = (x, y) => { if (x >= -0.01 && x <= W + 0.01 && y >= -0.01 && y <= H + 0.01 && !pts.some((p) => Math.abs(p[0] - x) < 0.5 && Math.abs(p[1] - y) < 0.5)) pts.push([x, y]); };
+      add(S - H, H); add(0, S); add(W, S - W); add(S, 0);
+      if (pts.length < 2) return null;
+      pts.sort((a, b) => b[1] - a[1]);
+      return [pts[0], pts[pts.length - 1]];
+    };
+    const render = (decal) => {
+      const st = decal._peel;
+      const face = $('.decal__face', decal);
+      const curl = $('.decal__curl', decal);
+      const W = face.offsetWidth;
+      const H = face.offsetHeight;
+      const d = st.d;
+      if (d < 0.5 || !W) {
+        face.style.clipPath = '';
+        curl.style.display = 'none';
+        return;
+      }
+      const S = W + H - d;
+      face.style.clipPath = `polygon(${clipRect(W, H, S).map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`).join(',')})`;
+      const seg = foldSegment(W, H, S);
+      if (!seg) { curl.style.display = 'none'; return; }
+      const [a, b] = seg;
+      const band = Math.min(H * 0.15, 9 + d * 0.06);
+      curl.style.display = 'block';
+      curl.style.width = `${Math.hypot(b[0] - a[0], b[1] - a[1]).toFixed(1)}px`;
+      curl.style.height = `${band.toFixed(1)}px`;
+      curl.style.transform = `translate(${a[0].toFixed(1)}px, ${(a[1] - band / 2).toFixed(1)}px) rotate(-45deg)`;
+    };
+    const ease = {
+      open: (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
+      close: (t) => { const c = 1.4; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); },
+    };
+    const peelTo = (decal, kind) => {
+      const st = decal._peel || (decal._peel = { d: 0, raf: 0 });
+      const face = $('.decal__face', decal);
+      const W = face.offsetWidth;
+      const H = face.offsetHeight;
+      const to = kind === 'open' ? openD(W, H) : kind === 'hover' ? HOVER_D : 0;
+      cancelAnimationFrame(st.raf);
+      if (reduce) { st.d = to; render(decal); return; }
+      const from = st.d;
+      const dur = kind === 'open' ? 950 : kind === 'hover' ? 420 : 650;
+      const fn = kind === 'close' && from > HOVER_D * 1.5 ? ease.close : ease.open;
+      const t0 = performance.now();
+      const step = (now) => {
+        const t = Math.min(1, (now - t0) / dur);
+        st.d = Math.max(0, from + (to - from) * fn(t));
+        render(decal);
+        if (t < 1) st.raf = requestAnimationFrame(step);
+      };
+      st.raf = requestAnimationFrame(step);
+    };
+
+    let hovering = false;
+    const isOpen = (d) => d.classList.contains('is-open');
+    const opened = () => $$('.decal.is-open', loop);
+    const setOpen = (decal, on) => {
+      decal.classList.toggle('is-open', on);
+      $('.decal__btn', decal).setAttribute('aria-pressed', String(on));
+      peelTo(decal, on ? 'open' : decal.matches(':hover') && fine ? 'hover' : 'close');
+    };
+    const closeAll = () => opened().forEach((d) => setOpen(d, false));
+
     loop.addEventListener('click', (e) => {
       const btn = e.target.closest('.decal__btn');
       if (!btn) return;
       const decal = btn.closest('.decal');
-      const on = !decal.classList.contains('is-flipped');
+      const on = !isOpen(decal);
       closeAll();
-      if (on) setFlip(center(decal) || decal, true);
+      if (on) setOpen(center(decal) || decal, true);
+      // richiudendo la descrizione il carosello riparte, anche col mouse ancora sopra
+      else hovering = false;
       kick();
     });
-    document.addEventListener('click', (e) => { if (!e.target.closest('[data-brandloop]') && flipped().length) { closeAll(); kick(); } });
-    addEventListener('keydown', (e) => { if (e.key === 'Escape' && flipped().length) { closeAll(); kick(); } });
+    document.addEventListener('click', (e) => { if (!e.target.closest('[data-brandloop]') && opened().length) { closeAll(); kick(); } });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && opened().length) { closeAll(); kick(); } });
 
-    // Inclinazione 3D che segue il mouse (l'angolo che si stacca è in CSS).
-    if (fine && !reduce) {
-      loop.addEventListener('pointermove', (e) => {
+    // Mouse: piccola piega nell'angolo e inclinazione 3D che segue il puntatore.
+    if (fine) {
+      loop.addEventListener('pointerover', (e) => {
         const decal = e.target.closest('.decal');
-        if (!decal) return;
-        const tilt = $('.decal__tilt', decal);
-        const r = tilt.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width - 0.5;
-        const py = (e.clientY - r.top) / r.height - 0.5;
-        tilt.style.setProperty('--rx', `${(-py * 14).toFixed(2)}deg`);
-        tilt.style.setProperty('--ry', `${(px * 16).toFixed(2)}deg`);
+        if (decal && !decal.contains(e.relatedTarget) && !isOpen(decal)) peelTo(decal, 'hover');
       });
       loop.addEventListener('pointerout', (e) => {
         const decal = e.target.closest('.decal');
-        if (decal && !decal.contains(e.relatedTarget)) {
-          const tilt = $('.decal__tilt', decal);
-          tilt.style.setProperty('--rx', '0deg');
-          tilt.style.setProperty('--ry', '0deg');
-        }
+        if (!decal || decal.contains(e.relatedTarget)) return;
+        if (!isOpen(decal)) peelTo(decal, 'close');
+        const tilt = $('.decal__tilt', decal);
+        tilt.style.setProperty('--rx', '0deg');
+        tilt.style.setProperty('--ry', '0deg');
       });
+      if (!reduce) {
+        loop.addEventListener('pointermove', (e) => {
+          const decal = e.target.closest('.decal');
+          if (!decal) return;
+          const tilt = $('.decal__tilt', decal);
+          const r = tilt.getBoundingClientRect();
+          const px = (e.clientX - r.left) / r.width - 0.5;
+          const py = (e.clientY - r.top) / r.height - 0.5;
+          tilt.style.setProperty('--rx', `${(-py * 14).toFixed(2)}deg`);
+          tilt.style.setProperty('--ry', `${(px * 16).toFixed(2)}deg`);
+        });
+      }
     }
+
+    // Ridimensionando la pagina la piega va ricalcolata sulle nuove misure.
+    const rerender = () => $$('.decal', loop).forEach((d) => {
+      if (!d._peel) return;
+      const face = $('.decal__face', d);
+      if (isOpen(d)) d._peel.d = openD(face.offsetWidth, face.offsetHeight);
+      render(d);
+    });
 
     if (reduce) {
       viewport.classList.add('is-static');
+      new ResizeObserver(rerender).observe(loop);
       return;
     }
 
@@ -643,35 +741,39 @@
     let setW = 0;
     let last = 0;
     let raf = 0;
-    let hovering = false;
     let visible = false;
     let focused = false;
     let seek = null;
     const measure = () => {
       const items = loop.children;
       setW = items[originals.length].offsetLeft - items[0].offsetLeft;
+      rerender();
     };
-    const paused = () => hovering || focused || flipped().length > 0;
+    const paused = () => hovering || focused || opened().length > 0;
     function frame(t) {
       const dt = last ? Math.min(0.05, (t - last) / 1000) : 0;
       last = t;
       const goal = paused() || !visible ? 0 : SPEED;
       if (seek !== null) {
-        // porta al centro l'adesivo appena girato
+        // porta al centro l'adesivo appena staccato
         x += (seek - x) * Math.min(1, dt * 7);
         speed = 0;
         if (Math.abs(seek - x) < 0.5) { x = seek; seek = null; }
       } else {
         speed += (goal - speed) * Math.min(1, dt * 3.2);
         x -= speed * dt;
-        if (setW && x <= -setW && !flipped().length) x += setW;
+        if (setW && x <= -setW && !opened().length) x += setW;
       }
       loop.style.transform = `translate3d(${x.toFixed(2)}px,0,0)`;
       if (seek === null && goal === 0 && speed < 0.4) { speed = 0; raf = 0; last = 0; return; }
       raf = requestAnimationFrame(frame);
     }
+    function kick() {
+      if (reduce) return;
+      if (!raf) raf = requestAnimationFrame(frame);
+    }
     // Centra un adesivo restando dentro le tre copie (così i bordi non restano mai vuoti).
-    // Se serve, usa la copia identica dell'insieme accanto e restituisce quella da girare.
+    // Se serve, usa la copia identica dell'insieme accanto e restituisce quella da aprire.
     function center(decal) {
       if (reduce || !setW) return null;
       const items = [...loop.children];
@@ -690,10 +792,6 @@
       kick();
       return opts[0].el;
     }
-    function kick() {
-      if (reduce) return;
-      if (!raf) raf = requestAnimationFrame(frame);
-    }
 
     if (fine) {
       viewport.addEventListener('pointerenter', () => { hovering = true; });
@@ -701,6 +799,7 @@
     }
     // Con la tastiera: porta in vista l'adesivo che riceve il focus.
     loop.addEventListener('focusin', (e) => {
+      if (!e.target.matches(':focus-visible')) return; // solo navigazione da tastiera, non clic o tocchi
       focused = true;
       const decal = e.target.closest('.decal');
       if (!decal) return;
