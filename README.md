@@ -9,6 +9,16 @@ python3 -m http.server 5187
 
 e aprire http://localhost:5187.
 
+## Aggiornare il sito
+
+GitHub Pages fa tenere i file in cache ai browser per 10 minuti. Dopo ogni modifica a
+`assets/css/style.css` o `assets/js/main.js` va aggiornato il codice di versione in `index.html`,
+altrimenti un telefono può mostrare la pagina nuova con stile e script vecchi:
+
+```bash
+python3 tools/versiona.py && git add -A && git commit -m "Aggiornamento sito" && git push
+```
+
 ## Struttura
 
 - `index.html` — tutte le sezioni e i testi, dati strutturati `BikeStore` per Google.
