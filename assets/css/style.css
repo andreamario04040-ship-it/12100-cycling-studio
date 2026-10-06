@@ -898,21 +898,13 @@ html.js .bike [data-show], html.js .bk-chain, html.js .bike .rimtxt, html.js .bi
     background: linear-gradient(var(--alu), rgba(233, 232, 228, 0));
     pointer-events: none;
   }
-  .profile__top {
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
-    align-items: end;
-    gap: 4px 14px;
-    margin-bottom: 8px;
-    font-size: 10.5px;
-    letter-spacing: .1em;
-  }
-  .profile__alt { grid-column: 1; grid-row: 1 / span 2; font-size: 46px; }
-  .profile__from, .profile__to { grid-column: 2; text-align: right; }
-  .profile__from { grid-row: 1; }
-  .profile__to { grid-row: 2; }
-  .profile__top br, .profile__long { display: none; }
-  .profile__top b { margin-left: .5em; }
+  /* altitudine sopra, partenza e arrivo sotto il grafico ai due estremi della salita */
+  .profile__chart { display: flex; flex-wrap: wrap; align-items: flex-start; column-gap: 12px; }
+  .profile__top { display: contents; font-size: 10.5px; letter-spacing: .08em; }
+  .profile__alt { order: 1; flex: 1 1 100%; margin-bottom: 6px; font-size: 46px; }
+  .profile__svg { order: 2; flex: 1 1 100%; }
+  .profile__from, .profile__to { order: 3; margin-top: 8px; line-height: 1.35; }
+  .profile__to { margin-left: auto; text-align: right; }
   html.js .stage { min-height: 34svh; }
   html.js .stages { margin-top: 14px; padding-bottom: 4svh; }
 }

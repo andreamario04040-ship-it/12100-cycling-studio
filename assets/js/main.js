@@ -420,14 +420,33 @@
     let v = 0;
     let moved = 0;
     let raf = 0;
+    let startIdx = 0;
+    let ptype = 'mouse';
+    let wheelT = 0;
     const sw = items.map(() => ({ a: 0, va: 0 }));
 
     let entered = reduce || !('IntersectionObserver' in window);
     const bound = (t) => clamp(t, min, 0);
+    // Punti di aggancio: ogni bici si ferma allineata al margine della pagina.
+    const snaps = () => {
+      const pad = parseFloat(getComputedStyle(track).paddingLeft) || 0;
+      return items.map((it) => bound(pad - it.offsetLeft));
+    };
+    const nearest = (t) => {
+      const s = snaps();
+      let best = 0;
+      s.forEach((pos, i) => { if (Math.abs(pos - t) < Math.abs(s[best] - t)) best = i; });
+      return best;
+    };
+    const goTo = (i) => {
+      const s = snaps();
+      target = s[clamp(i, 0, s.length - 1)];
+      kick();
+    };
     const measure = () => {
       min = Math.min(0, rack.clientWidth - track.scrollWidth);
       target = bound(target);
-      if (entered) kick();
+      if (entered) goTo(nearest(target));
       else updateBtns();
     };
     const updateBtns = () => {
@@ -464,6 +483,8 @@
       entered = true;
       down = true;
       moved = 0;
+      ptype = e.pointerType;
+      startIdx = nearest(target);
       sx = lx = e.clientX;
       lt = performance.now();
       st = target;
@@ -489,8 +510,16 @@
       if (!down) return;
       down = false;
       rack.classList.remove('is-drag');
-      target = bound(target + v * 12);
-      kick();
+      const dx = lx - sx;
+      if (ptype !== 'mouse' || !fine) {
+        // Touch: uno swipe porta esattamente alla bici successiva (o precedente).
+        let i = nearest(target);
+        if (i === startIdx && (Math.abs(dx) > 36 || Math.abs(v) > 6)) i = startIdx + (dx < 0 ? 1 : -1);
+        goTo(clamp(i, startIdx - 1, startIdx + 1));
+      } else {
+        // Mouse: un po' di inerzia, poi aggancio alla bici più vicina.
+        goTo(nearest(bound(target + v * 12)));
+      }
     };
     addEventListener('pointerup', release);
     addEventListener('pointercancel', release);
@@ -507,12 +536,13 @@
         target = bound(target - e.deltaX);
         if (hint) hint.classList.add('is-gone');
         kick();
+        clearTimeout(wheelT);
+        wheelT = setTimeout(() => goTo(nearest(target)), 160);
       }
     }, { passive: false });
 
-    const step = () => items[0].getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || '0');
-    prevBtn.addEventListener('click', () => { target = bound(target + step()); kick(); });
-    nextBtn.addEventListener('click', () => { target = bound(target - step()); kick(); });
+    prevBtn.addEventListener('click', () => goTo(nearest(target) - 1));
+    nextBtn.addEventListener('click', () => goTo(nearest(target) + 1));
 
     // Tastiera: porta in vista la scheda che riceve il focus.
     rack.addEventListener('scroll', () => { rack.scrollLeft = 0; });
@@ -520,10 +550,7 @@
       const it = e.target.closest('.rack__item');
       if (!it) return;
       const left = it.offsetLeft + target;
-      if (left < 0 || left + it.offsetWidth > rack.clientWidth) {
-        target = bound(-it.offsetLeft + (rack.clientWidth - it.offsetWidth) / 2);
-        kick();
-      }
+      if (left < 0 || left + it.offsetWidth > rack.clientWidth) goTo(items.indexOf(it));
     });
 
     new ResizeObserver(measure).observe(rack);
