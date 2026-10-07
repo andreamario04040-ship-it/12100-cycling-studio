@@ -12,7 +12,7 @@ e aprire http://localhost:5187.
 ## Aggiornare il sito
 
 GitHub Pages fa tenere i file in cache ai browser per 10 minuti. Dopo ogni modifica a
-`assets/css/style.css` o `assets/js/main.js` va aggiornato il codice di versione in `index.html`,
+`assets/css/style.css` o `assets/js/main.js` va aggiornato il codice di versione in `index.html` e `404.html`,
 altrimenti un telefono può mostrare la pagina nuova con stile e script vecchi:
 
 ```bash
@@ -26,6 +26,8 @@ python3 tools/versiona.py && git add -A && git commit -m "Aggiornamento sito" &&
 - `assets/js/main.js` — animazioni (GSAP, ScrollTrigger, SplitText, Lenis da CDN) e interazioni:
   disegno tecnico che si traccia e pedala allo scroll, rastrelliera trascinabile con oscillazione,
   ordine di lavoro, profilo altimetrico, cartellino di prenotazione → WhatsApp, orari con stato live.
+- `404.html` — pagina per gli indirizzi inesistenti: la ruota forata al posto dello zero, da rigonfiare
+  con la pompa (oltre gli 8 bar scoppia). GitHub Pages la usa da sola, con stato 404.
 - `assets/img/` — logo (originale e versioni trasparenti), favicon, icona Apple, anteprima per i link.
 
 ## Da completare prima della pubblicazione
@@ -38,6 +40,7 @@ python3 tools/versiona.py && git add -A && git commit -m "Aggiornamento sito" &&
    Se arriva un SVG ufficiale, basta sostituire questi file. L'URL di `og:image` va aggiornato col dominio definitivo.
 3. **P.IVA** nel footer (`XXXXXXXXXXX`) e pagine **Privacy** e **Cookie** (link `#` nel footer).
 4. **Dominio**: quando è noto, aggiungere `<link rel="canonical">`, `og:url`, e `url`/`image` nel JSON-LD.
+   In `404.html` tutti i percorsi iniziano con `/12100-cycling-studio/`: con un dominio proprio diventano `/`.
 5. **WhatsApp**: form, bottoni e schede usano `wa.me/393337648755`. Verificare che il numero sia
    attivo su WhatsApp (altrimenti cambiare i link in `tel:`).
 6. **Modelli in rastrelliera**: i nomi (Cervélo S5, Colnago V5Rs, Factor Ostro VAM…) sono esempi dei
