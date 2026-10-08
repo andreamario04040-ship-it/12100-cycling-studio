@@ -1,7 +1,39 @@
 {
-  "aggiornato": "2026-10-08T14:16:56.908Z",
+  "aggiornato": "2026-10-08T20:47:38.835Z",
   "whatsapp": "393337648755",
   "bici": [
+    {
+      "id": "strada-race",
+      "stato": "pubblicata",
+      "titolo": "Strada race",
+      "prezzo": "",
+      "taglia": "",
+      "descrizione": "Leggere, rigide, reattive. Sono le bici che sulle salite del Cuneese fanno la differenza.",
+      "modelli": "Colnago V5Rs · Cervélo R5 · Factor O2 VAM",
+      "cta": {
+        "tipo": "whatsapp",
+        "testo": "Chiedi disponibilità",
+        "messaggio": "Ciao! Vorrei informazioni sulle bici da strada race."
+      },
+      "foto": [
+        {
+          "sorgente": "unsplash",
+          "chiave": "photo-1779043750169-bbbe14e52f9d",
+          "alt": "Bici da corsa nera con coperture para su cavalletto",
+          "inquadratura": 36
+        },
+        {
+          "sorgente": "sito",
+          "chiave": "bici/strada-race-teat",
+          "alt": "",
+          "larghezze": [
+            480,
+            800,
+            1200
+          ]
+        }
+      ]
+    },
     {
       "id": "strada-aero",
       "stato": "pubblicata",
@@ -24,23 +56,23 @@
       ]
     },
     {
-      "id": "strada-race",
+      "id": "gravel",
       "stato": "pubblicata",
-      "titolo": "Strada race",
+      "titolo": "Gravel",
       "prezzo": "",
       "taglia": "",
-      "descrizione": "Leggere, rigide, reattive. Sono le bici che sulle salite del Cuneese fanno la differenza.",
-      "modelli": "Colnago V5Rs · Cervélo R5 · Factor O2 VAM",
+      "descrizione": "Sterrati, strade bianche e bikepacking: libertà, con la stessa cura di una bici da corsa.",
+      "modelli": "Cervélo Áspero · Colnago G4-X",
       "cta": {
         "tipo": "whatsapp",
         "testo": "Chiedi disponibilità",
-        "messaggio": "Ciao! Vorrei informazioni sulle bici da strada race."
+        "messaggio": "Ciao! Vorrei informazioni sulle bici gravel."
       },
       "foto": [
         {
           "sorgente": "unsplash",
-          "chiave": "photo-1779043750169-bbbe14e52f9d",
-          "alt": "Bici da corsa nera con coperture para su cavalletto"
+          "chiave": "photo-1635702961175-f6949dded992",
+          "alt": "Ciclista in gravel su uno sterrato in controluce al mattino"
         }
       ]
     },
@@ -62,27 +94,6 @@
           "sorgente": "unsplash",
           "chiave": "photo-1649651244819-79b28e4a9ce1",
           "alt": "Bici da strada nera parcheggiata davanti a un edificio moderno"
-        }
-      ]
-    },
-    {
-      "id": "gravel",
-      "stato": "pubblicata",
-      "titolo": "Gravel",
-      "prezzo": "",
-      "taglia": "",
-      "descrizione": "Sterrati, strade bianche e bikepacking: libertà, con la stessa cura di una bici da corsa.",
-      "modelli": "Cervélo Áspero · Colnago G4-X",
-      "cta": {
-        "tipo": "whatsapp",
-        "testo": "Chiedi disponibilità",
-        "messaggio": "Ciao! Vorrei informazioni sulle bici gravel."
-      },
-      "foto": [
-        {
-          "sorgente": "unsplash",
-          "chiave": "photo-1635702961175-f6949dded992",
-          "alt": "Ciclista in gravel su uno sterrato in controluce al mattino"
         }
       ]
     },
