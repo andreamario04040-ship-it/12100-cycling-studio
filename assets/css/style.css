@@ -533,9 +533,28 @@ html.js .tape:not(.is-on) { background-size: 0% 100%; color: inherit; }
 .rack__item { position: relative; width: clamp(270px, 25vw, 410px); padding-top: 56px; transform-origin: 50% 18px; will-change: transform; }
 .rack__hook { position: absolute; left: 50%; top: 0; width: 36px; height: 64px; margin-left: -18px; fill: none; stroke: #4f5359; stroke-width: 4.5; stroke-linecap: round; overflow: visible; }
 .rcard { position: relative; background: var(--paper); box-shadow: 0 1px 0 var(--line), 0 26px 40px -30px rgba(14, 15, 17, .55); }
-.rcard__img { aspect-ratio: 4 / 5; overflow: hidden; background: var(--alu-2); }
+.rcard__img { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--alu-2); }
 .rcard__img img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; transition: transform 1.4s var(--ease), filter .6s; filter: saturate(.85); }
 .rcard:hover .rcard__img img { transform: scale(1.045); filter: none; }
+
+/* più foto della stessa bici: scorrono da sole, o si scelgono coi pallini */
+.rcard__strip { display: flex; width: 100%; height: 100%; transition: transform .8s var(--ease); will-change: transform; }
+.rcard__slide { flex: 0 0 100%; height: 100%; overflow: hidden; }
+.rcard__dots { position: absolute; left: 0; right: 0; bottom: 12px; display: none; justify-content: center; gap: 7px; }
+.rcard__img.is-ready .rcard__dots { display: flex; }
+.rcard__dot {
+  width: 7px; height: 7px; padding: 0;
+  border: 0; border-radius: 50%;
+  background: rgba(246, 245, 242, .5);
+  box-shadow: 0 1px 4px rgba(14, 15, 17, .6);
+  cursor: pointer;
+  transition: background .35s var(--ease), transform .35s var(--ease);
+}
+.rcard__dot.is-active { background: var(--paper); transform: scale(1.5); }
+.rcard__dot:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .rcard__strip { transition: none; }
+}
 .rcard__body { padding: 22px 24px 26px; }
 .rcard__title { margin: 0 0 10px; font-family: var(--f-display); font-weight: 800; font-size: clamp(30px, 2.5vw, 40px); line-height: .9; text-transform: uppercase; }
 .rcard__body p { margin: 0 0 14px; color: var(--muted); font-size: 15px; line-height: 1.5; }

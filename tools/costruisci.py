@@ -40,27 +40,54 @@ def attr(s):
     return testo(s).replace('"', "&quot;")
 
 
-def foto_html(foto):
-    if not foto or not foto.get("chiave"):
-        return ""
-    if foto.get("sorgente") == "unsplash":
-        url = lambda w: f"https://images.unsplash.com/{foto['chiave']}?auto=format&fit=crop&w={w}&q=78"
+def scatti_di(bici):
+    """Le foto di una bici, sempre come lista (una volta ce n'era una sola)."""
+    foto = bici.get("foto")
+    if isinstance(foto, dict):
+        foto = [foto]
+    return [s for s in (foto or []) if s.get("chiave")]
+
+
+def immagine(scatto):
+    if scatto.get("sorgente") == "unsplash":
+        url = lambda w: f"https://images.unsplash.com/{scatto['chiave']}?auto=format&fit=crop&w={w}&q=78"
         larghezze = LARGHEZZE_UNSPLASH
     else:
-        url = lambda w: f"assets/img/{foto['chiave']}-{w}.webp"
+        url = lambda w: f"assets/img/{scatto['chiave']}-{w}.webp"
         # Una foto piccola non viene ingrandita: il pannello carica solo le misure
         # che ci stanno dentro e le scrive qui.
-        larghezze = [int(w) for w in foto.get("larghezze") or LARGHEZZE_SITO]
+        larghezze = [int(w) for w in scatto.get("larghezze") or LARGHEZZE_SITO]
     base = 1200 if 1200 in larghezze else max(larghezze)
     srcset = ", ".join(f"{url(w)} {w}w" for w in sorted(larghezze))
     # Taglio verticale della foto nella scheda (la scheda è 4:5): 50% è il centro.
-    inq = foto.get("inquadratura", 50)
+    inq = scatto.get("inquadratura", 50)
     stile = f' style="object-position:50% {inq}%"' if inq not in (50, None, "") else ""
+    return (f'<img src="{attr(url(base))}" srcset="{attr(srcset)}" sizes="{SIZES}"'
+            f' alt="{attr(scatto.get("alt", ""))}" decoding="async" draggable="false"'
+            f' loading="lazy"{stile}>')
+
+
+def foto_html(scatti):
+    """Una foto sola resta una foto sola; da due in su diventa una pila che scorre."""
+    if not scatti:
+        return ""
+    if len(scatti) == 1:
+        return f'<div class="rcard__img">{immagine(scatti[0])}</div>'
+    pallini = "".join(
+        f'<button class="rcard__dot{" is-active" if i == 0 else ""}" type="button"'
+        f' data-vai="{i}" aria-label="Foto {i + 1} di {len(scatti)}"'
+        + (' aria-current="true"' if i == 0 else "")
+        + "></button>"
+        for i in range(len(scatti)))
     return (
-        f'<div class="rcard__img"><img src="{attr(url(base))}" srcset="{attr(srcset)}"'
-        f' sizes="{SIZES}" alt="{attr(foto.get("alt", ""))}" decoding="async"'
-        f' draggable="false" loading="lazy"{stile}></div>'
-    )
+        '<div class="rcard__img" data-galleria>'
+        # Ogni foto nel suo riquadro: così l'ingrandimento al passaggio del mouse
+        # resta dentro la sua, senza farsi vedere da quella accanto.
+        + '<div class="rcard__strip" data-strip>'
+        + "".join(f'<span class="rcard__slide">{immagine(s)}</span>' for s in scatti)
+        + "</div>"
+        f'<div class="rcard__dots">{pallini}</div>'
+        "</div>")
 
 
 def cta_href(cta, numero):
@@ -74,7 +101,7 @@ def scheda(bici, numero):
     r.append('          <svg class="rack__hook" viewBox="0 0 36 64" aria-hidden="true">'
              '<path d="M18 64V22c0-11-13-12-13-3"/></svg>')
     r.append('          <article class="rcard">')
-    img = foto_html(bici.get("foto"))
+    img = foto_html(scatti_di(bici))
     if img:
         r.append(f"            {img}")
     r.append('            <div class="rcard__body">')

@@ -41,9 +41,16 @@ python3 tools/costruisci.py
 Campi di ogni bici: `titolo`, `prezzo` e `taglia` (vuoti = non compaiono),
 `descrizione`, `modelli` (la riga in fondo alla scheda), `cta` (bottone WhatsApp
 o link), `foto` e `stato` (`pubblicata` o `bozza`: in bozza resta nel file ma
-non sul sito). Le foto possono venire da Unsplash (`"sorgente": "unsplash"`,
-quelle provvisorie di adesso) o dal sito (`"sorgente": "sito"`, quelle caricate
-dal pannello); `inquadratura` alza o abbassa il taglio verticale della foto.
+non sul sito).
+
+`foto` è una **lista**: una bici può averne più d'una e nella scheda scorrono da
+sole ogni 4,5 secondi, o si scelgono coi pallini in basso (`initGallerie` in
+`main.js`). Con una foto sola la scheda resta quella di prima, senza pallini.
+Lo scorrimento si ferma col mouse sopra la scheda, quando la scheda non è in
+vista, quando la pagina è in secondo piano e con `prefers-reduced-motion`: lì i
+pallini restano e funzionano. Ogni scatto ha `sorgente` (`unsplash` per le foto
+provvisorie di adesso, `sito` per quelle caricate dal pannello), `chiave`, `alt`
+e `inquadratura`, che alza o abbassa il taglio verticale di quella foto.
 
 **Attenzione**: `index.html` fra i segnaposto delle bici è generato. Modificarlo
 a mano lì dentro non serve: al primo aggiornamento dal pannello viene riscritto.

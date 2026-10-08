@@ -571,6 +571,57 @@
     }
   }
 
+  /* ------------------------------------------------------------ bici: più foto per scheda */
+  function initGallerie() {
+    const ATTESA = 4500;
+    $$('[data-galleria]').forEach((gal) => {
+      const strip = $('[data-strip]', gal);
+      const dots = $$('.rcard__dot', gal);
+      if (!strip || dots.length < 2) return;
+      let i = 0;
+      let timer = null;
+      let ferma = false;      // il mouse è sopra, o c'è il fuoco da tastiera
+      let visibile = false;
+
+      const vai = (n) => {
+        i = (n + dots.length) % dots.length;
+        strip.style.transform = `translate3d(${-i * 100}%,0,0)`;
+        dots.forEach((d, k) => {
+          d.classList.toggle('is-active', k === i);
+          if (k === i) d.setAttribute('aria-current', 'true');
+          else d.removeAttribute('aria-current');
+        });
+      };
+
+      const scorri = () => {
+        // Da sola scorre solo quando serve: scheda in vista, scheda ferma,
+        // pagina in primo piano e animazioni non disattivate.
+        if (!reduce && visibile && !ferma && !document.hidden) vai(i + 1);
+      };
+      const riparti = () => {
+        clearInterval(timer);
+        timer = setInterval(scorri, ATTESA);
+      };
+
+      dots.forEach((d, k) => d.addEventListener('click', (e) => {
+        e.stopPropagation();
+        vai(k);
+        riparti();
+      }));
+      gal.addEventListener('pointerenter', () => { ferma = true; });
+      gal.addEventListener('pointerleave', () => { ferma = false; });
+      gal.addEventListener('focusin', () => { ferma = true; });
+      gal.addEventListener('focusout', () => { ferma = false; });
+
+      new IntersectionObserver((voci) => {
+        visibile = voci.some((v) => v.isIntersecting);
+      }, { threshold: 0.35 }).observe(gal);
+
+      gal.classList.add('is-ready');   // i pallini compaiono solo se il codice gira
+      riparti();
+    });
+  }
+
   /* ------------------------------------------------------------ marchi: adesivi in loop */
   function initDecals() {
     const loop = $('[data-brandloop]');
@@ -1222,6 +1273,7 @@
   initPhotoFinish();
   initRolls();
   initRack();
+  initGallerie();
   initDecals();
   initWorkshop();
   initProfile();

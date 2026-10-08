@@ -15,11 +15,13 @@
         "testo": "Chiedi disponibilità",
         "messaggio": "Ciao! Vorrei informazioni sulle bici da strada aero."
       },
-      "foto": {
-        "sorgente": "unsplash",
-        "chiave": "photo-1779043750145-cbfc339d713e",
-        "alt": "Bici da corsa aero nera in carbonio su un cavalletto da esposizione"
-      }
+      "foto": [
+        {
+          "sorgente": "unsplash",
+          "chiave": "photo-1779043750145-cbfc339d713e",
+          "alt": "Bici da corsa aero nera in carbonio su un cavalletto da esposizione"
+        }
+      ]
     },
     {
       "id": "strada-race",
@@ -34,11 +36,13 @@
         "testo": "Chiedi disponibilità",
         "messaggio": "Ciao! Vorrei informazioni sulle bici da strada race."
       },
-      "foto": {
-        "sorgente": "unsplash",
-        "chiave": "photo-1779043750169-bbbe14e52f9d",
-        "alt": "Bici da corsa nera con coperture para su cavalletto"
-      }
+      "foto": [
+        {
+          "sorgente": "unsplash",
+          "chiave": "photo-1779043750169-bbbe14e52f9d",
+          "alt": "Bici da corsa nera con coperture para su cavalletto"
+        }
+      ]
     },
     {
       "id": "allround",
@@ -53,11 +57,13 @@
         "testo": "Chiedi disponibilità",
         "messaggio": "Ciao! Vorrei informazioni sulle bici allround."
       },
-      "foto": {
-        "sorgente": "unsplash",
-        "chiave": "photo-1649651244819-79b28e4a9ce1",
-        "alt": "Bici da strada nera parcheggiata davanti a un edificio moderno"
-      }
+      "foto": [
+        {
+          "sorgente": "unsplash",
+          "chiave": "photo-1649651244819-79b28e4a9ce1",
+          "alt": "Bici da strada nera parcheggiata davanti a un edificio moderno"
+        }
+      ]
     },
     {
       "id": "gravel",
@@ -72,11 +78,13 @@
         "testo": "Chiedi disponibilità",
         "messaggio": "Ciao! Vorrei informazioni sulle bici gravel."
       },
-      "foto": {
-        "sorgente": "unsplash",
-        "chiave": "photo-1635702961175-f6949dded992",
-        "alt": "Ciclista in gravel su uno sterrato in controluce al mattino"
-      }
+      "foto": [
+        {
+          "sorgente": "unsplash",
+          "chiave": "photo-1635702961175-f6949dded992",
+          "alt": "Ciclista in gravel su uno sterrato in controluce al mattino"
+        }
+      ]
     },
     {
       "id": "su-misura",
@@ -91,11 +99,13 @@
         "testo": "Progettiamola",
         "messaggio": "Ciao! Vorrei progettare una bici su misura."
       },
-      "foto": {
-        "sorgente": "unsplash",
-        "chiave": "photo-1624915436890-2d451eec8ca0",
-        "alt": "Dettaglio di una forcella in carbonio"
-      }
+      "foto": [
+        {
+          "sorgente": "unsplash",
+          "chiave": "photo-1624915436890-2d451eec8ca0",
+          "alt": "Dettaglio di una forcella in carbonio"
+        }
+      ]
     },
     {
       "id": "ruote-upgrade",
@@ -110,11 +120,13 @@
         "testo": "Chiedi un consiglio",
         "messaggio": "Ciao! Vorrei informazioni su ruote e upgrade."
       },
-      "foto": {
-        "sorgente": "unsplash",
-        "chiave": "photo-1788981549385-b33058732340",
-        "alt": "Dettaglio di un cerchio in carbonio ad alto profilo"
-      }
+      "foto": [
+        {
+          "sorgente": "unsplash",
+          "chiave": "photo-1788981549385-b33058732340",
+          "alt": "Dettaglio di un cerchio in carbonio ad alto profilo"
+        }
+      ]
     },
     {
       "id": "usato-selezionato",
@@ -129,11 +141,13 @@
         "testo": "Guarda su Instagram",
         "url": "https://www.instagram.com/12100cyclingstudio/"
       },
-      "foto": {
-        "sorgente": "unsplash",
-        "chiave": "photo-1576435728678-68d0fbf94e91",
-        "alt": "Bici da corsa scura appoggiata a una parete in legno"
-      }
+      "foto": [
+        {
+          "sorgente": "unsplash",
+          "chiave": "photo-1576435728678-68d0fbf94e91",
+          "alt": "Bici da corsa scura appoggiata a una parete in legno"
+        }
+      ]
     }
   ]
 }
