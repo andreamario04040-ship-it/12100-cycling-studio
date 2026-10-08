@@ -540,6 +540,9 @@ html.js .tape:not(.is-on) { background-size: 0% 100%; color: inherit; }
 .rcard__title { margin: 0 0 10px; font-family: var(--f-display); font-weight: 800; font-size: clamp(30px, 2.5vw, 40px); line-height: .9; text-transform: uppercase; }
 .rcard__body p { margin: 0 0 14px; color: var(--muted); font-size: 15px; line-height: 1.5; }
 .rcard__body .rcard__brands { color: var(--ink); font-stretch: 85%; font-weight: 600; font-size: 13px; letter-spacing: .04em; padding-top: 12px; border-top: 1px dashed var(--line); }
+.rcard__body .rcard__meta { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: -2px 0 12px; color: var(--ink); }
+.rcard__price { font-family: var(--f-num); font-weight: 800; font-size: 26px; line-height: 1; letter-spacing: .01em; }
+.rcard__size { padding: 4px 9px 3px; background: var(--kraft); font-stretch: 85%; font-weight: 600; font-size: 11.5px; line-height: 1; letter-spacing: .12em; text-transform: uppercase; }
 .rcard__cta { display: inline-flex; align-items: center; gap: 10px; font-stretch: 85%; font-weight: 600; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; color: var(--blue); }
 .rcard__cta svg { width: 18px; height: 18px; transition: transform .5s var(--ease); }
 .rcard__cta:hover svg, .rcard__cta:focus-visible svg { transform: translateX(6px); }

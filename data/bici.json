@@ -1,0 +1,139 @@
+{
+  "aggiornato": "",
+  "whatsapp": "393337648755",
+  "bici": [
+    {
+      "id": "strada-aero",
+      "stato": "pubblicata",
+      "titolo": "Strada aero",
+      "prezzo": "",
+      "taglia": "",
+      "descrizione": "Profili aerodinamici, ruote ad alto profilo e posizione racing: per chi misura le uscite in watt.",
+      "modelli": "Cervélo S5 · Factor Ostro VAM · Colnago Y1Rs",
+      "cta": {
+        "tipo": "whatsapp",
+        "testo": "Chiedi disponibilità",
+        "messaggio": "Ciao! Vorrei informazioni sulle bici da strada aero."
+      },
+      "foto": {
+        "sorgente": "unsplash",
+        "chiave": "photo-1779043750145-cbfc339d713e",
+        "alt": "Bici da corsa aero nera in carbonio su un cavalletto da esposizione"
+      }
+    },
+    {
+      "id": "strada-race",
+      "stato": "pubblicata",
+      "titolo": "Strada race",
+      "prezzo": "",
+      "taglia": "",
+      "descrizione": "Leggere, rigide, reattive. Sono le bici che sulle salite del Cuneese fanno la differenza.",
+      "modelli": "Colnago V5Rs · Cervélo R5 · Factor O2 VAM",
+      "cta": {
+        "tipo": "whatsapp",
+        "testo": "Chiedi disponibilità",
+        "messaggio": "Ciao! Vorrei informazioni sulle bici da strada race."
+      },
+      "foto": {
+        "sorgente": "unsplash",
+        "chiave": "photo-1779043750169-bbbe14e52f9d",
+        "alt": "Bici da corsa nera con coperture para su cavalletto"
+      }
+    },
+    {
+      "id": "allround",
+      "stato": "pubblicata",
+      "titolo": "Allround",
+      "prezzo": "",
+      "taglia": "",
+      "descrizione": "Una sola bici per tutto: scorrevole in pianura, leggera in salita, comoda dopo centocinquanta chilometri.",
+      "modelli": "Cervélo Soloist · Colnago C68 · Factor Monza",
+      "cta": {
+        "tipo": "whatsapp",
+        "testo": "Chiedi disponibilità",
+        "messaggio": "Ciao! Vorrei informazioni sulle bici allround."
+      },
+      "foto": {
+        "sorgente": "unsplash",
+        "chiave": "photo-1649651244819-79b28e4a9ce1",
+        "alt": "Bici da strada nera parcheggiata davanti a un edificio moderno"
+      }
+    },
+    {
+      "id": "gravel",
+      "stato": "pubblicata",
+      "titolo": "Gravel",
+      "prezzo": "",
+      "taglia": "",
+      "descrizione": "Sterrati, strade bianche e bikepacking: libertà, con la stessa cura di una bici da corsa.",
+      "modelli": "Cervélo Áspero · Colnago G4-X",
+      "cta": {
+        "tipo": "whatsapp",
+        "testo": "Chiedi disponibilità",
+        "messaggio": "Ciao! Vorrei informazioni sulle bici gravel."
+      },
+      "foto": {
+        "sorgente": "unsplash",
+        "chiave": "photo-1635702961175-f6949dded992",
+        "alt": "Ciclista in gravel su uno sterrato in controluce al mattino"
+      }
+    },
+    {
+      "id": "su-misura",
+      "stato": "pubblicata",
+      "titolo": "Su misura",
+      "prezzo": "",
+      "taglia": "",
+      "descrizione": "Scegli telaio, gruppo e ruote: assembliamo ogni pezzo. Come la nostra Evolve Cima con Dura-Ace ed Elitewheels.",
+      "modelli": "Evolve · Colnago · Factor",
+      "cta": {
+        "tipo": "whatsapp",
+        "testo": "Progettiamola",
+        "messaggio": "Ciao! Vorrei progettare una bici su misura."
+      },
+      "foto": {
+        "sorgente": "unsplash",
+        "chiave": "photo-1624915436890-2d451eec8ca0",
+        "alt": "Dettaglio di una forcella in carbonio"
+      }
+    },
+    {
+      "id": "ruote-upgrade",
+      "stato": "pubblicata",
+      "titolo": "Ruote & upgrade",
+      "prezzo": "",
+      "taglia": "",
+      "descrizione": "Ruote in carbonio, cuscinetti ceramici, componenti in titanio: grammi e watt guadagnati, montati come si deve.",
+      "modelli": "Elitewheels · CeramicSpeed · Carbon-Ti",
+      "cta": {
+        "tipo": "whatsapp",
+        "testo": "Chiedi un consiglio",
+        "messaggio": "Ciao! Vorrei informazioni su ruote e upgrade."
+      },
+      "foto": {
+        "sorgente": "unsplash",
+        "chiave": "photo-1788981549385-b33058732340",
+        "alt": "Dettaglio di un cerchio in carbonio ad alto profilo"
+      }
+    },
+    {
+      "id": "usato-selezionato",
+      "stato": "pubblicata",
+      "titolo": "Usato selezionato",
+      "prezzo": "",
+      "taglia": "",
+      "descrizione": "Bici controllate in officina e occasioni a chilometri quasi zero. Le novità escono prima su Instagram.",
+      "modelli": "Disponibilità che cambia ogni settimana",
+      "cta": {
+        "tipo": "link",
+        "testo": "Guarda su Instagram",
+        "url": "https://www.instagram.com/12100cyclingstudio/"
+      },
+      "foto": {
+        "sorgente": "unsplash",
+        "chiave": "photo-1576435728678-68d0fbf94e91",
+        "alt": "Bici da corsa scura appoggiata a una parete in legno"
+      }
+    }
+  ]
+}

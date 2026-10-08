@@ -19,6 +19,36 @@ altrimenti un telefono può mostrare la pagina nuova con stile e script vecchi:
 python3 tools/versiona.py && git add -A && git commit -m "Aggiornamento sito" && git push
 ```
 
+## Le bici
+
+Le bici in rastrelliera non si scrivono più a mano in `index.html`: stanno in
+`data/bici.json` e le gestisce lo zio dal pannello
+[Gestione bici](https://github.com/andreamario04040-ship-it/12100-gestione-bici),
+che è un sito a parte, fuori da questo dominio.
+
+Quando il pannello pubblica, scrive `data/bici.json` (e le foto in `assets/img/bici/`).
+Da lì il workflow `.github/workflows/sito.yml` lancia `tools/costruisci.py`, che
+rigenera le schede dentro `index.html` fra i segnaposto `<!-- bici: ... -->` e
+`<!-- /bici -->`, e pubblica su Pages. Il sito resta statico: le bici si vedono
+anche a JavaScript spento e Google le legge nella pagina.
+
+Si può lavorare anche da qui: si cambia `data/bici.json` a mano e si lancia
+
+```bash
+python3 tools/costruisci.py
+```
+
+Campi di ogni bici: `titolo`, `prezzo` e `taglia` (vuoti = non compaiono),
+`descrizione`, `modelli` (la riga in fondo alla scheda), `cta` (bottone WhatsApp
+o link), `foto` e `stato` (`pubblicata` o `bozza`: in bozza resta nel file ma
+non sul sito). Le foto possono venire da Unsplash (`"sorgente": "unsplash"`,
+quelle provvisorie di adesso) o dal sito (`"sorgente": "sito"`, quelle caricate
+dal pannello); `inquadratura` alza o abbassa il taglio verticale della foto.
+
+**Attenzione**: `index.html` fra i segnaposto delle bici è generato. Modificarlo
+a mano lì dentro non serve: al primo aggiornamento dal pannello viene riscritto.
+Il modello della scheda (classi, markup) sta in `tools/costruisci.py`.
+
 ## Struttura
 
 - `index.html` — tutte le sezioni e i testi, dati strutturati `BikeStore` per Google.
@@ -35,6 +65,10 @@ python3 tools/versiona.py && git add -A && git commit -m "Aggiornamento sito" &&
 - `assets/vendor/` — GSAP 3.15.0 e Lenis 1.3.26, copiati dal pacchetto ufficiale: nessuna richiesta ai CDN.
   Per aggiornarli si crea una nuova cartella con il numero di versione e si cambiano i percorsi in `index.html`.
 - `assets/img/` — logo (originale e versioni trasparenti), favicon, icona Apple, anteprima per i link.
+- `data/bici.json` — le bici in rastrelliera (vedi sopra). `data/pubblicato.json` lo scrive
+  `tools/costruisci.py` e serve al pannello per sapere quando il sito è davvero online.
+- `tools/costruisci.py` — rigenera le schede delle bici in `index.html` partendo dai dati.
+- `.github/workflows/sito.yml` — a ogni push su `main`: ricostruisce le bici e pubblica su Pages.
 
 ## Da completare prima della pubblicazione
 
@@ -54,8 +88,9 @@ python3 tools/versiona.py && git add -A && git commit -m "Aggiornamento sito" &&
    In `404.html` tutti i percorsi iniziano con `/12100-cycling-studio/`: con un dominio proprio diventano `/`.
 5. **WhatsApp**: form, bottoni e schede usano `wa.me/393337648755`. Verificare che il numero sia
    attivo su WhatsApp (altrimenti cambiare i link in `tel:`).
-6. **Modelli in rastrelliera**: i nomi (Cervélo S5, Colnago V5Rs, Factor Ostro VAM…) sono esempi dei
-   marchi trattati; aggiornarli con le bici realmente disponibili.
+6. **Bici in rastrelliera**: le sette schede di adesso sono categorie di esempio (Strada aero, Gravel,
+   Su misura…). Vanno sostituite con le bici davvero in negozio dal pannello Gestione bici, che permette
+   anche di metterci prezzo, taglia e foto del negozio.
 7. **Indicizzazione**: l'anteprima ha `<meta name="robots" content="noindex, nofollow">` per non finire su Google;
    toglierla da `index.html` e `privacy.html` quando il sito va online sul dominio definitivo (la 404 resta noindex).
 8. **Loghi dei marchi** (`assets/img/brands/`): presi dai siti ufficiali di Colnago, Cervélo, Factor,
