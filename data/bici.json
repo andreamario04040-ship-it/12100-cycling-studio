@@ -1,33 +1,7 @@
 {
-  "aggiornato": "2026-10-08T14:13:52.046Z",
+  "aggiornato": "2026-10-08T14:16:56.908Z",
   "whatsapp": "393337648755",
   "bici": [
-    {
-      "id": "prova",
-      "stato": "pubblicata",
-      "titolo": "Prova ",
-      "prezzo": "10000000000",
-      "taglia": "55",
-      "descrizione": "Prova ",
-      "modelli": "Prova 1",
-      "cta": {
-        "tipo": "whatsapp",
-        "testo": "Chiedi disponibilità",
-        "messaggio": "Ciao! Vorrei informazioni su questa bici."
-      },
-      "foto": {
-        "sorgente": "sito",
-        "chiave": "bici/prova-amty",
-        "alt": "Bici di prova",
-        "inquadratura": 94,
-        "larghezze": [
-          480,
-          800,
-          1200,
-          1800
-        ]
-      }
-    },
     {
       "id": "strada-aero",
       "stato": "pubblicata",
