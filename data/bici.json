@@ -1,5 +1,5 @@
 {
-  "aggiornato": "2026-10-10T10:15:59.955Z",
+  "aggiornato": "2026-10-10T10:19:19.790Z",
   "whatsapp": "393337648755",
   "bici": [
     {
@@ -16,12 +16,6 @@
         "messaggio": "Ciao! Vorrei informazioni sulle bici da strada race."
       },
       "foto": [
-        {
-          "sorgente": "unsplash",
-          "chiave": "photo-1779043750169-bbbe14e52f9d",
-          "alt": "Bici da corsa nera con coperture para su cavalletto",
-          "inquadratura": 36
-        },
         {
           "sorgente": "sito",
           "chiave": "bici/strada-race-zz4p",
