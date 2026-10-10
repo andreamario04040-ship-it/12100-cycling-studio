@@ -1,5 +1,5 @@
 {
-  "aggiornato": "2026-10-08T20:47:38.835Z",
+  "aggiornato": "2026-10-10T10:14:07.011Z",
   "whatsapp": "393337648755",
   "bici": [
     {
@@ -24,12 +24,13 @@
         },
         {
           "sorgente": "sito",
-          "chiave": "bici/strada-race-teat",
+          "chiave": "bici/strada-race-zz4p",
           "alt": "",
           "larghezze": [
             480,
             800,
-            1200
+            1200,
+            1800
           ]
         }
       ]
