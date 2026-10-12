@@ -112,7 +112,7 @@
   --f-text: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --pad: clamp(16px, 4vw, 56px);
-  --hdr: 68px;
+  --hdr: 84px;
   --ease: cubic-bezier(.22, 1, .36, 1);
   --ease-io: cubic-bezier(.75, 0, .2, 1);
 }
@@ -279,7 +279,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   transition: background-color .35s;
 }
 /* nel menu in alto: il logo completo, con la scritta sotto */
-.hdr .logo__full { width: auto; height: 60px; }
+.hdr .logo__full { width: auto; height: 74px; }
 
 .hdr__nav { display: flex; gap: clamp(18px, 2.2vw, 34px); margin-inline: auto; }
 .hdr__nav a {
@@ -365,7 +365,7 @@ html.menu-open .hdr .btn { --bg: var(--alu); --fg: var(--ink); }
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  padding-top: calc(var(--hdr) + clamp(20px, 4.5vh, 64px));
+  padding-top: calc(var(--hdr) + clamp(12px, 3vh, 48px));
 }
 .hero__title {
   margin: 0;
@@ -984,8 +984,8 @@ html.js .bike [data-show], html.js .bk-chain, html.js .bike .rimtxt, html.js .bi
   .status { display: none; }
 }
 @media (max-width: 1023px) {
-  :root { --hdr: 62px; }
-  .hdr .logo__full { height: 54px; }
+  :root { --hdr: 72px; }
+  .hdr .logo__full { height: 62px; }
   .hdr__nav { display: none; }
   .hdr__right { margin-left: auto; }
   .hdr__menu { display: inline-flex; }

@@ -144,7 +144,9 @@
   hdr.addEventListener('focusin', () => hdr.classList.remove('is-hidden'));
   if (anim) {
     $$('[data-theme="dark"]').forEach((sec) => {
-      ST.create({ trigger: sec, start: 'top 34px', end: 'bottom 34px', toggleClass: { targets: hdr, className: 'is-dark' } });
+      // il colore cambia quando la sezione scura arriva a metà barra
+      const mid = () => hdr.offsetHeight / 2;
+      ST.create({ trigger: sec, start: () => `top ${mid()}px`, end: () => `bottom ${mid()}px`, toggleClass: { targets: hdr, className: 'is-dark' } });
     });
   }
 
