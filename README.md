@@ -84,12 +84,13 @@ Il modello della scheda (classi, markup) sta in `tools/costruisci.py`.
    Ogni `<img>` in `index.html` punta a `images.unsplash.com`: basta cambiare `src`/`srcset`.
    Con le foto nel sito, togliere da `index.html` il `preconnect` a Unsplash e da `privacy.html` il paragrafo
    sulle foto di prova (punto 2): a quel punto il sito non contatta più nessun server esterno.
-2. **Logo**: inserito. `logo-mark.png` (simbolo, in alto) e `logo-full.png` (footer) sono ricavati dal file
-   originale come maschere trasparenti e prendono il colore della sezione; `og-image.png` è l'anteprima dei link.
+2. **Logo**: inserito. `logo-full.png` (logo completo con la scritta sotto, nel menu in alto e nel footer) è ricavato
+   dal file originale come maschera trasparente e prende il colore della sezione; `og-image.png` è l'anteprima dei link.
    Se arriva un SVG ufficiale, basta sostituire questi file. L'URL di `og:image` va aggiornato col dominio definitivo.
-3. **P.IVA** nel footer di `index.html` e `privacy.html` (`XXXXXXXXXXX`). In `privacy.html` completare i dati
-   evidenziati in kraft (ragione sociale, P.IVA, email, tempo di conservazione dei messaggi WhatsApp) e
-   far rivedere il testo a un consulente privacy prima del lancio. Se si aggiungono statistiche, pixel
+3. **Dati legali**: ragione sociale (ERRELLE COMPANY S.R.L.), P.IVA ed email sono nel footer e in `privacy.html`.
+   Restano da fare: far rivedere l'informativa a un consulente privacy prima del lancio (in particolare la
+   conservazione dei messaggi «finché il cliente non chiede di cancellarli») e aggiungere nel footer i dati che
+   la legge chiede alle S.r.l.: sede legale, numero REA e capitale sociale. Se si aggiungono statistiche, pixel
    pubblicitari o un negozio online, servono informativa aggiornata e banner dei cookie.
 4. **Dominio**: quando è noto, aggiungere `<link rel="canonical">`, `og:url`, e `url`/`image` nel JSON-LD.
    In `404.html` tutti i percorsi iniziano con `/12100-cycling-studio/`: con un dominio proprio diventano `/`.
