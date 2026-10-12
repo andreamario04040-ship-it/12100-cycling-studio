@@ -399,13 +399,15 @@ html.menu-open .hdr .btn { --bg: var(--alu); --fg: var(--ink); }
 .facts dd { margin: 0; display: flex; align-items: center; gap: 6px; }
 .facts a { text-decoration: none; }
 .facts a:hover { color: var(--blue); }
+.facts dd.facts__tel { flex-direction: column; align-items: flex-start; gap: 3px; }
 .facts__star { width: 15px; height: 15px; fill: var(--blue); }
 .hero__drawing { margin: 0; align-self: stretch; display: flex; align-items: flex-end; min-height: 300px; }
+/* Desktop: l'hero occupa lo schermo e il disegno riempie lo spazio che resta. Se il testo è più alto
+   dello schermo (portatili bassi) l'hero si allunga, invece di finire sotto la sezione successiva. */
 @media (min-width: 1024px) {
-  .hero { height: 100svh; min-height: 700px; }
-  .hero__body { min-height: 0; }
-  .hero__drawing { min-height: 0; height: 100%; }
-  .hero__drawing .bike { height: 100%; max-height: none; }
+  .hero { min-height: max(100svh, 700px); }
+  .hero__drawing { position: relative; min-height: 0; }
+  .hero__drawing .bike { position: absolute; inset: 0; width: 100%; height: 100%; max-height: none; }
 }
 
 /* technical drawing */
@@ -652,8 +654,6 @@ html.js .tape:not(.is-on) { background-size: 0% 100%; color: inherit; }
   .sheet__viewport.is-dragging, .sheet__viewport.is-dragging .decal__btn { cursor: grabbing; }
 }
 .sheet__hint { margin: 0; font-stretch: 85%; font-weight: 600; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--blue); }
-.sheet__more { margin: 0; font-size: 15px; color: var(--muted); }
-.sheet__more strong { color: var(--ink); font-weight: 600; }
 html:not(.js) .sheet__viewport, .sheet__viewport.is-static { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
 
 /* --------------------------------------------------------------- workshop (dark) */
@@ -869,6 +869,9 @@ html.js .stage.is-on { opacity: 1; }
 .visit__addr { margin: 0 0 22px; font-family: var(--f-display); font-weight: 700; font-size: clamp(36px, 3.6vw, 62px); line-height: .95; text-transform: uppercase; }
 .visit__tel { font-family: var(--f-num); font-weight: 800; font-size: clamp(38px, 3.8vw, 64px); line-height: 1; letter-spacing: .01em; text-decoration: none; }
 .visit__tel:hover { color: var(--blue); }
+.visit__tels { display: grid; gap: 16px; justify-items: start; }
+.visit__tels .visit__tel { display: grid; }
+.visit__tel small { margin-bottom: 5px; font-family: var(--f-text); font-stretch: 85%; font-weight: 600; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 .visit__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
 .hours__status { display: flex; align-items: center; gap: 12px; margin: 0 0 26px; font-family: var(--f-display); font-weight: 700; font-size: clamp(28px, 2.4vw, 40px); line-height: 1; text-transform: uppercase; }
 .hours__status .status__wheel { width: 30px; height: 30px; stroke-width: 1.4; }

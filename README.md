@@ -93,21 +93,22 @@ Il modello della scheda (classi, markup) sta in `tools/costruisci.py`.
    pubblicitari o un negozio online, servono informativa aggiornata e banner dei cookie.
 4. **Dominio**: quando è noto, aggiungere `<link rel="canonical">`, `og:url`, e `url`/`image` nel JSON-LD.
    In `404.html` tutti i percorsi iniziano con `/12100-cycling-studio/`: con un dominio proprio diventano `/`.
-5. **WhatsApp**: form, bottoni e schede usano `wa.me/393337648755`. Verificare che il numero sia
+5. **Telefoni e WhatsApp**: Francesco (333 764 8755) e Stefano (328 255 1103) compaiono nell'hero, nel menu
+   da telefono, in Contatti e nel footer. Form, bottoni e schede usano `wa.me/393337648755` (Francesco). Verificare che il numero sia
    attivo su WhatsApp (altrimenti cambiare i link in `tel:`).
 6. **Bici in rastrelliera**: le sette schede di adesso sono categorie di esempio (Strada aero, Gravel,
    Su misura…). Vanno sostituite con le bici davvero in negozio dal pannello Gestione bici, che permette
    anche di metterci prezzo, taglia e foto del negozio.
 7. **Indicizzazione**: l'anteprima ha `<meta name="robots" content="noindex, nofollow">` per non finire su Google;
    toglierla da `index.html` e `privacy.html` quando il sito va online sul dominio definitivo (la 404 resta noindex).
-8. **Loghi dei marchi** (`assets/img/brands/`): presi dai siti ufficiali di Colnago, Cervélo, Factor,
-   CeramicSpeed e Carbon-Ti, solo ritagliati. Da concessionari conviene chiedere ai referenti il kit loghi
+8. **Loghi dei marchi** (`assets/img/brands/`): presi dai siti ufficiali di Colnago, Cervélo, Orbea, Evolve,
+   Elitewheels, CeramicSpeed e Carbon-Ti, solo ritagliati. Di Elitewheels c'è solo la scritta, senza il motto,
+   ed è un'immagine piccola (222 px): è la prima da sostituire con un file vettoriale. Da concessionari conviene chiedere ai referenti il kit loghi
    ufficiale (SVG) e le eventuali regole d'uso, e sostituire i file con quelli.
 9. **Orari**: sono in `HOURS` in `assets/js/main.js`, nel JSON-LD di `index.html` e nel footer.
 
 ## Note
 
 - La mappa Google si carica solo dopo il clic (nessun cookie di terze parti prima del consenso).
-- I font arrivano da Google Fonts; per la massima tutela privacy si possono ospitare in locale.
 - Con `prefers-reduced-motion` attivo le animazioni vengono disattivate e il contenuto resta completo;
-  se i CDN non rispondono, il sito resta leggibile e funzionante.
+  se gli script non partono, il sito resta leggibile e funzionante.
