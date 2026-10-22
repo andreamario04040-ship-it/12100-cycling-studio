@@ -390,9 +390,9 @@ html.menu-open .hdr .btn { --bg: var(--alu); --fg: var(--ink); }
 .hero__lead { font-size: clamp(18px, 1.35vw, 22px); line-height: 1.45; font-weight: 500; letter-spacing: -.01em; margin-bottom: 14px; }
 /* le due promesse del negozio, affiancate come due colonne di una scheda */
 .hero__pillars { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin: 0 0 18px; }
-.hero__pillars > div { padding-top: 11px; border-top: 2px solid var(--ink); }
-.hero__pillars dt { margin: 0 0 8px; font-family: var(--f-display); font-weight: 800; font-size: clamp(20px, 1.5vw, 27px); line-height: .95; text-transform: uppercase; text-wrap: balance; }
-.hero__pillars dd { margin: 0; font-size: clamp(15px, 1.05vw, 18px); line-height: 1.4; font-weight: 500; letter-spacing: -.01em; }
+.hero__pillars > div { padding-top: 12px; border-top: 2px solid var(--ink); }
+.hero__pillars dt { margin: 0 0 10px; font-family: var(--f-display); font-weight: 800; font-size: clamp(26px, 2.2vw, 38px); line-height: .92; text-transform: uppercase; text-wrap: balance; }
+.hero__pillars dd { margin: 0; font-size: clamp(17px, 1.3vw, 21px); line-height: 1.38; font-weight: 500; letter-spacing: -.01em; }
 .hero__dealer { color: var(--muted); margin-bottom: 28px; }
 .hero__dealer strong { color: var(--ink); font-weight: 600; }
 .hero__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px; margin-bottom: 36px; }
